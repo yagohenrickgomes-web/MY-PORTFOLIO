@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel Admin — Portfólio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{ background:#06060a; color:#f2f3f7; font-family:'Inter',sans-serif; line-height:1.6; }
+  a{ color:inherit; }
+  header{
+    position:sticky; top:0; z-index:10; background:rgba(6,6,10,0.9); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,0.09); padding:16px 32px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  header h1{ font-family:'Space Grotesk',sans-serif; font-size:17px; }
+  header .actions{ display:flex; gap:16px; align-items:center; font-size:13px; }
+  header a.logout{ color:#ff9b9b; text-decoration:none; }
+  header a.view-site{ color:#4f7cff; text-decoration:none; }
+
+  .wrap{ max-width:920px; margin:0 auto; padding:40px 24px 100px; }
+  .tabs{ display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap; }
+  .tab-btn{
+    padding:10px 18px; border-radius:100px; border:1px solid rgba(255,255,255,0.09);
+    background:rgba(255,255,255,0.045); color:#9a9db0; font-size:13px; cursor:pointer; font-family:inherit;
+  }
+  .tab-btn.active{ background:linear-gradient(135deg,#4f7cff,#9b6bff); color:#fff; border-color:transparent; }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .card{
+    background:rgba(255,255,255,0.045); border:1px solid rgba(255,255,255,0.09); border-radius:16px;
+    padding:26px; margin-bottom:20px;
+  }
+  .card h2{ font-family:'Space Grotesk',sans-serif; font-size:16px; margin-bottom:18px; }
+  label{ display:block; font-size:12px; color:#9a9db0; margin-bottom:6px; margin-top:14px; }
+  label:first-of-type{ margin-top:0; }
+  input, textarea, select{
+    width:100%; padding:11px 14px; background:rgba(255,255,255,0.045);
+    border:1px solid rgba(255,255,255,0.09); border-radius:10px; color:#f2f3f7; font-size:13.5px; font-family:inherit;
+  }
+  textarea{ resize:vertical; min-height:70px; }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:#4f7cff; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .btn{
+    display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border-radius:100px; border:none;
+    background:linear-gradient(135deg,#4f7cff,#9b6bff); color:#fff; font-size:13px; font-weight:600; cursor:pointer;
+    font-family:inherit; margin-top:16px;
+  }
+  .btn.danger{ background:rgba(255,80,80,0.18); color:#ff9b9b; border:1px solid rgba(255,80,80,0.3); }
+  .btn.secondary{ background:rgba(255,255,255,0.08); color:#f2f3f7; border:1px solid rgba(255,255,255,0.12); }
+
+  .project-row{
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+    padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .project-row:last-child{ border-bottom:none; }
+  .project-row .info{ flex:1; }
+  .project-row .info strong{ font-size:14px; }
+  .project-row .badge{ font-size:11px; padding:3px 10px; border-radius:100px; margin-left:8px; }
+  .badge.pub{ background:rgba(91,227,140,0.18); color:#5be38c; }
+  .badge.priv{ background:rgba(255,255,255,0.12); color:#fff; }
+  .project-row .btns{ display:flex; gap:8px; }
+  .project-row .btns button, .project-row .btns a{
+    font-size:12px; padding:7px 14px; border-radius:100px; border:1px solid rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.05); color:#f2f3f7; cursor:pointer; text-decoration:none; font-family:inherit;
+  }
+
+  details.new-project{ margin-top:20px; }
+  details.new-project summary{ cursor:pointer; font-size:13px; color:#4f7cff; margin-bottom:14px; }
+
+  .checkbox-row{ display:flex; align-items:center; gap:8px; margin-top:14px; }
+  .checkbox-row input{ width:auto; }
+  .checkbox-row label{ margin:0; }
+
+  .success{ background:rgba(91,227,140,0.12); border:1px solid rgba(91,227,140,0.3); color:#5be38c;
+    padding:10px 14px; border-radius:10px; font-size:13px; margin-bottom:18px; }
+  .error{ background:rgba(255,80,80,0.12); border:1px solid rgba(255,80,80,0.3); color:#ff9b9b;
+    padding:10px 14px; border-radius:10px; font-size:13px; margin-bottom:18px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Painel Admin — Yago Henrick</h1>
+  <div class="actions">
+    <span>Olá, {{ username }}</span>
+    <a class="view-site" href="/" target="_blank">Ver site ↗</a>
+    <a class="logout" href="/admin/logout">Sair</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="content">Conteúdo</button>
+    <button class="tab-btn" data-tab="projects">Projetos</button>
+    <button class="tab-btn" data-tab="account">Conta</button>
+  </div>
+
+  <!-- ===== CONTEÚDO ===== -->
+  <div class="panel active" id="panel-content">
+    <div class="card">
+      <h2>Hero</h2>
+      <form method="post" action="/admin/settings/hero_role">
+        <label>Cargo (PT)</label>
+        <input type="text" name="value_pt" value="{{ settings.hero_role.pt }}">
+        <label>Role (EN)</label>
+        <input type="text" name="value_en" value="{{ settings.hero_role.en }}">
+        <button class="btn" type="submit">Salvar Cargo</button>
+      </form>
+      <form method="post" action="/admin/settings/hero_sub" style="margin-top:20px;">
+        <label>Subtítulo (PT)</label>
+        <textarea name="value_pt">{{ settings.hero_sub.pt }}</textarea>
+        <label>Subtitle (EN)</label>
+        <textarea name="value_en">{{ settings.hero_sub.en }}</textarea>
+        <button class="btn" type="submit">Salvar Subtítulo</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Sobre Mim</h2>
+      {% for key in ['about_p1','about_p2','about_p3'] %}
+      <form method="post" action="/admin/settings/{{ key }}" style="margin-bottom:20px;">
+        <label>Parágrafo (PT)</label>
+        <textarea name="value_pt">{{ settings[key].pt }}</textarea>
+        <label>Paragraph (EN)</label>
+        <textarea name="value_en">{{ settings[key].en }}</textarea>
+        <button class="btn" type="submit">Salvar</button>
+      </form>
+      {% endfor %}
+    </div>
+
+    <div class="card">
+      <h2>Contato</h2>
+      <form method="post" action="/admin/settings/contact_email">
+        <label>E-mail de contato</label>
+        <input type="email" name="value_pt" value="{{ settings.contact_email.pt }}">
+        <input type="hidden" name="value_en" value="{{ settings.contact_email.pt }}">
+        <button class="btn" type="submit">Salvar E-mail</button>
+      </form>
+      <form method="post" action="/admin/settings/linkedin_url" style="margin-top:20px;">
+        <label>LinkedIn (URL)</label>
+        <input type="url" name="value_pt" value="{{ settings.linkedin_url.pt }}">
+        <input type="hidden" name="value_en" value="{{ settings.linkedin_url.pt }}">
+        <button class="btn" type="submit">Salvar LinkedIn</button>
+      </form>
+      <form method="post" action="/admin/settings/github_url" style="margin-top:20px;">
+        <label>GitHub (URL)</label>
+        <input type="url" name="value_pt" value="{{ settings.github_url.pt }}">
+        <input type="hidden" name="value_en" value="{{ settings.github_url.pt }}">
+        <button class="btn" type="submit">Salvar GitHub</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== PROJETOS ===== -->
+  <div class="panel" id="panel-projects">
+    <div class="card">
+      <h2>Projetos existentes</h2>
+      {% for p in projects %}
+      <div class="project-row">
+        <div class="info">
+          <strong>{{ p.title_pt }}</strong>
+          {% if p.is_public %}<span class="badge pub">🌐 Público</span>{% else %}<span class="badge priv">🔒 Privado</span>{% endif %}
+        </div>
+        <div class="btns">
+          <a href="#edit-{{ p.id }}" onclick="toggleEdit({{ p.id }})">Editar</a>
+          <form method="post" action="/admin/projects/{{ p.id }}/delete" onsubmit="return confirm('Excluir este projeto?');" style="display:inline;">
+            <button type="submit" class="danger-inline" style="background:none;border:none;color:#ff9b9b;cursor:pointer;font-size:12px;padding:0;">Excluir</button>
+          </form>
+        </div>
+      </div>
+      <div id="edit-{{ p.id }}" style="display:none; padding:16px 0;">
+        <form method="post" action="/admin/projects/{{ p.id }}/edit">
+          <div class="row2">
+            <div><label>Título (PT)</label><input type="text" name="title_pt" value="{{ p.title_pt }}"></div>
+            <div><label>Title (EN)</label><input type="text" name="title_en" value="{{ p.title_en }}"></div>
+          </div>
+          <div class="row2">
+            <div><label>Descrição (PT)</label><textarea name="desc_pt">{{ p.desc_pt }}</textarea></div>
+            <div><label>Description (EN)</label><textarea name="desc_en">{{ p.desc_en }}</textarea></div>
+          </div>
+          <label>Tags (separadas por vírgula)</label>
+          <input type="text" name="tags" value="{{ p.tags }}">
+          <div class="row2">
+            <div>
+              <label>Cor do card</label>
+              <select name="media_class">
+                {% for c in ['pm-1','pm-2','pm-3','pm-4','pm-5','pm-6'] %}
+                <option value="{{ c }}" {% if p.media_class == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div><label>Ordem</label><input type="number" name="sort_order" value="{{ p.sort_order }}"></div>
+          </div>
+          <label>URL (se público)</label>
+          <input type="url" name="url" value="{{ p.url }}" placeholder="https://...">
+          <div class="checkbox-row">
+            <input type="checkbox" name="is_public" id="pub-{{ p.id }}" {% if p.is_public %}checked{% endif %}>
+            <label for="pub-{{ p.id }}">Projeto público (mostra link real em vez de preview)</label>
+          </div>
+          <button class="btn" type="submit">Salvar Alterações</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="card">
+      <details class="new-project">
+        <summary>+ Adicionar novo projeto</summary>
+        <form method="post" action="/admin/projects/new">
+          <div class="row2">
+            <div><label>Título (PT)</label><input type="text" name="title_pt" required></div>
+            <div><label>Title (EN)</label><input type="text" name="title_en" required></div>
+          </div>
+          <div class="row2">
+            <div><label>Descrição (PT)</label><textarea name="desc_pt" required></textarea></div>
+            <div><label>Description (EN)</label><textarea name="desc_en" required></textarea></div>
+          </div>
+          <label>Tags (separadas por vírgula)</label>
+          <input type="text" name="tags" placeholder="Python, FastAPI, PostgreSQL">
+          <div class="row2">
+            <div>
+              <label>Cor do card</label>
+              <select name="media_class">
+                <option value="pm-1">pm-1</option><option value="pm-2">pm-2</option>
+                <option value="pm-3">pm-3</option><option value="pm-4">pm-4</option>
+                <option value="pm-5">pm-5</option><option value="pm-6">pm-6</option>
+              </select>
+            </div>
+            <div><label>Ordem</label><input type="number" name="sort_order" value="0"></div>
+          </div>
+          <label>URL (se público)</label>
+          <input type="url" name="url" placeholder="https://...">
+          <div class="checkbox-row">
+            <input type="checkbox" name="is_public" id="new-pub">
+            <label for="new-pub">Projeto público (mostra link real em vez de preview)</label>
+          </div>
+          <button class="btn" type="submit">Adicionar Projeto</button>
+        </form>
+      </details>
+    </div>
+  </div>
+
+  <!-- ===== CONTA ===== -->
+  <div class="panel" id="panel-account">
+    <div class="card">
+      <h2>Trocar senha</h2>
+      {% if password_error %}<div class="error">{{ password_error }}</div>{% endif %}
+      <form method="post" action="/admin/password">
+        <label>Senha atual</label>
+        <input type="password" name="current_password" required>
+        <label>Nova senha</label>
+        <input type="password" name="new_password" required minlength="6">
+        <button class="btn" type="submit">Atualizar Senha</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  function toggleEdit(id){
+    const el = document.getElementById('edit-' + id);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // abre a aba certa se vier com #projects ou #account na URL
+  const hash = window.location.hash.replace('#','');
+  if(hash){
+    const btn = document.querySelector('.tab-btn[data-tab="' + hash + '"]');
+    if(btn) btn.click();
+  }
+</script>
+</body>
+</html>

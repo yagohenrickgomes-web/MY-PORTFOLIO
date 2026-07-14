@@ -1,0 +1,8 @@
+fastapi
+starlette>=0.40,<0.50
+uvicorn[standard]
+jinja2
+python-multipart
+itsdangerous
+psycopg2-binary
+python-dotenv

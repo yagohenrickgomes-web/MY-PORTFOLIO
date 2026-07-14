@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yago Henrick Alves Gomes — Business Process &amp; AI Automation Specialist</title>
+<meta name="description" content="Yago Henrick Alves Gomes — Especialista em Automação de Processos com Inteligência Artificial, Python e Business Intelligence. Transformando operações em soluções inteligentes.">
+
+<meta property="og:title" content="Yago Henrick Alves Gomes — Business Process & AI Automation Specialist">
+<meta property="og:description" content="Automatizando processos empresariais com Inteligência Artificial, Python e Análise de Dados.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FAF9F6">
+<meta name="robots" content="index, follow">
+<meta name="keywords" content="automação de processos, inteligência artificial, python, business intelligence, excel, power bi, desenvolvedor freelance">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/static/style.css">
+
+<script>
+  window.CONTACT_EMAIL = {{ settings.contact_email.pt|tojson }};
+  window.DYNAMIC_I18N = {
+    pt: {
+      hero_sub: {{ settings.hero_sub.pt|tojson }},
+      hero_role: {{ settings.hero_role.pt|tojson }},
+      about_p1: {{ settings.about_p1.pt|tojson }},
+      about_p2: {{ settings.about_p2.pt|tojson }},
+      about_p3: {{ settings.about_p3.pt|tojson }}
+      {% for p in projects %}, proj_dyn_{{ p.id }}_title: {{ p.title_pt|tojson }}, proj_dyn_{{ p.id }}_desc: {{ p.desc_pt|tojson }}{% endfor %}
+    },
+    en: {
+      hero_sub: {{ settings.hero_sub.en|tojson }},
+      hero_role: {{ settings.hero_role.en|tojson }},
+      about_p1: {{ settings.about_p1.en|tojson }},
+      about_p2: {{ settings.about_p2.en|tojson }},
+      about_p3: {{ settings.about_p3.en|tojson }}
+      {% for p in projects %}, proj_dyn_{{ p.id }}_title: {{ p.title_en|tojson }}, proj_dyn_{{ p.id }}_desc: {{ p.desc_en|tojson }}{% endfor %}
+    }
+  };
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Yago Henrick Alves Gomes",
+  "jobTitle": "Business Process & AI Automation Specialist",
+  "email": "mailto:yago.contato@email.com",
+  "knowsAbout": ["Python", "Artificial Intelligence", "Business Automation", "Business Intelligence", "Excel", "Power BI"]
+}
+</script>
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <div class="loader-mark">
+    <span>Y</span><span>H</span>
+  </div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="noise-overlay"></div>
+
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="javascript:void(0)" onclick="nav('top')" class="brand">
+      <span class="brand-mark">YHG</span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="javascript:void(0)" onclick="nav('about')" data-i18n="nav_about">Sobre</a>
+      <a href="javascript:void(0)" onclick="nav('services')" data-i18n="nav_services">O Que Faço</a>
+      <a href="javascript:void(0)" onclick="nav('projects')" data-i18n="nav_projects">Projetos</a>
+      <a href="javascript:void(0)" onclick="nav('experience')" data-i18n="nav_experience">Experiência</a>
+      <a href="javascript:void(0)" onclick="nav('blog')" data-i18n="nav_blog">Blog</a>
+      <a href="javascript:void(0)" onclick="nav('contact')" data-i18n="nav_contact">Contato</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Trocar idioma">
+        <span class="lang-opt active" data-lang="pt">PT</span>
+        <span class="lang-sep">/</span>
+        <span class="lang-opt" data-lang="en">EN</span>
+      </button>
+      <a href="javascript:void(0)" onclick="nav('contact')" class="btn btn-primary btn-small" data-i18n="nav_cta">Contato</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="javascript:void(0)" onclick="nav('about')" data-i18n="nav_about">Sobre</a>
+  <a href="javascript:void(0)" onclick="nav('services')" data-i18n="nav_services">O Que Faço</a>
+  <a href="javascript:void(0)" onclick="nav('technologies')" data-i18n="nav_tech">Tecnologias</a>
+  <a href="javascript:void(0)" onclick="nav('projects')" data-i18n="nav_projects">Projetos</a>
+  <a href="javascript:void(0)" onclick="nav('experience')" data-i18n="nav_experience">Experiência</a>
+  <a href="javascript:void(0)" onclick="nav('education')" data-i18n="nav_education">Formação</a>
+  <a href="javascript:void(0)" onclick="nav('blog')" data-i18n="nav_blog">Blog</a>
+  <a href="javascript:void(0)" onclick="nav('contact')" data-i18n="nav_contact">Contato</a>
+</div>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-glow glow-1"></div>
+      <div class="hero-glow glow-2"></div>
+      <svg class="hero-grid" width="100%" height="100%"><defs><pattern id="gridPattern" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(28,27,24,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#gridPattern)"/></svg>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-text" data-reveal>
+        <div class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="hero_eyebrow">Disponível para projetos remotos e presenciais</span></div>
+        <h1 class="hero-title">
+          <span data-i18n="hero_name">Yago Henrick</span><br>
+          <span class="gradient-text" data-i18n="hero_surname">Alves Gomes</span>
+        </h1>
+        <p class="hero-role" data-i18n="hero_role">{{ settings.hero_role.pt }}</p>
+        <p class="hero-sub" data-i18n="hero_sub">{{ settings.hero_sub.pt }}</p>
+
+        <div class="hero-actions">
+          <a href="javascript:void(0)" onclick="nav('projects')" class="btn btn-primary" data-i18n="hero_btn_projects">Ver Projetos</a>
+          <a href="javascript:void(0)" onclick="nav('contact')" class="btn btn-ghost" data-i18n="hero_btn_contact">Falar Comigo</a>
+          <a href="#" id="downloadCv" class="btn btn-text" data-i18n="hero_btn_cv">Download CV ↓</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" data-reveal>
+        <div class="pipeline-card">
+          <div class="pipeline-header">
+            <span class="pipeline-label" data-i18n="pipeline_label">Fluxo de Automação</span>
+            <span class="pipeline-status"><span class="dot-live"></span> Live</span>
+          </div>
+          <svg class="pipeline-svg" viewBox="0 0 460 220" fill="none">
+            <path id="pipePath" d="M40,60 C120,60 100,160 190,160 C260,160 240,60 320,60 C370,60 380,110 420,110" stroke="rgba(22,50,79,0.35)" stroke-width="2" fill="none"/>
+            <circle class="pipe-particle" r="4" fill="#16324F"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#pipePath"/></animateMotion></circle>
+            <circle class="pipe-particle" r="4" fill="#35688C"><animateMotion dur="3.2s" begin="1.1s" repeatCount="indefinite"><mpath href="#pipePath"/></animateMotion></circle>
+            <circle class="pipe-particle" r="4" fill="#16324F"><animateMotion dur="3.2s" begin="2.2s" repeatCount="indefinite"><mpath href="#pipePath"/></animateMotion></circle>
+
+            <g class="pipe-node" transform="translate(40,60)"><circle r="20" /><text x="0" y="5" text-anchor="middle">01</text></g>
+            <g class="pipe-node" transform="translate(190,160)"><circle r="20" /><text x="0" y="5" text-anchor="middle">02</text></g>
+            <g class="pipe-node" transform="translate(320,60)"><circle r="20" /><text x="0" y="5" text-anchor="middle">03</text></g>
+            <g class="pipe-node end" transform="translate(420,110)"><circle r="16" /><text x="0" y="5" text-anchor="middle">✓</text></g>
+          </svg>
+          <div class="pipeline-tags">
+            <span data-i18n="pipe_tag1">Dados</span>
+            <span data-i18n="pipe_tag2">IA</span>
+            <span data-i18n="pipe_tag3">Automação</span>
+            <span data-i18n="pipe_tag4">Resultado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue">
+      <span data-i18n="scroll_cue">Explore</span>
+      <div class="scroll-line"><div class="scroll-line-fill"></div></div>
+    </div>
+  </section>
+
+  <!-- ============ SOBRE ============ -->
+  <section class="section" id="about">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="about_eyebrow">Sobre Mim</span>
+        <h2 class="section-title" data-i18n="about_title">Onde negócios e tecnologia se encontram.</h2>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text" data-reveal>
+          <p data-i18n="about_p1">{{ settings.about_p1.pt }}</p>
+          <p data-i18n="about_p2">{{ settings.about_p2.pt }}</p>
+          <p data-i18n="about_p3">{{ settings.about_p3.pt }}</p>
+        </div>
+        <div class="about-stats" data-reveal>
+          <div class="stat-card">
+            <span class="stat-number" data-count="5">0</span><span class="stat-plus">+</span>
+            <span class="stat-label" data-i18n="stat1_label">Projetos entregues</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" data-count="3">0</span>
+            <span class="stat-label" data-i18n="stat2_label">Áreas de formação</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" data-count="100">0</span><span class="stat-plus">%</span>
+            <span class="stat-label" data-i18n="stat3_label">Foco em resultado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ O QUE FAÇO ============ -->
+  <section class="section section-alt" id="services">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="services_eyebrow">O Que Faço</span>
+        <h2 class="section-title" data-i18n="services_title">Soluções que unem processo, dado e automação.</h2>
+      </div>
+
+      <div class="cards-grid" data-reveal>
+        <div class="service-card">
+          <div class="service-icon">⚙</div>
+          <h3 data-i18n="service1_title">Automação de Processos</h3>
+          <p data-i18n="service1_desc">Elimino tarefas repetitivas e conecto sistemas para que sua equipe foque no que realmente importa.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">✦</div>
+          <h3 data-i18n="service2_title">Inteligência Artificial</h3>
+          <p data-i18n="service2_desc">Aplico IA de forma prática: extração de dados, OCR, assistentes e classificação inteligente.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">&lt;/&gt;</div>
+          <h3 data-i18n="service3_title">Desenvolvimento Python</h3>
+          <p data-i18n="service3_desc">Sistemas desktop e web sob medida, do banco de dados à interface final.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">▦</div>
+          <h3 data-i18n="service4_title">Dashboards em Excel</h3>
+          <p data-i18n="service4_desc">Planilhas inteligentes e dashboards que transformam números em decisão rápida.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">◈</div>
+          <h3 data-i18n="service5_title">Business Analytics</h3>
+          <p data-i18n="service5_desc">Análise de dados aplicada à realidade do negócio, sem complexidade desnecessária.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">◎</div>
+          <h3 data-i18n="service6_title">Soluções de Software</h3>
+          <p data-i18n="service6_desc">Do diagnóstico à entrega: sistemas completos pensados para o seu processo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TECNOLOGIAS ============ -->
+  <section class="section" id="technologies">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="tech_eyebrow">Tecnologias</span>
+        <h2 class="section-title" data-i18n="tech_title">Ferramentas do dia a dia.</h2>
+      </div>
+      <div class="tech-grid" data-reveal>
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">FastAPI</span>
+        <span class="tech-pill">PostgreSQL</span>
+        <span class="tech-pill">SQL</span>
+        <span class="tech-pill">Git</span>
+        <span class="tech-pill">GitHub</span>
+        <span class="tech-pill">Docker</span>
+        <span class="tech-pill">HTML</span>
+        <span class="tech-pill">CSS</span>
+        <span class="tech-pill">JavaScript</span>
+        <span class="tech-pill">Excel</span>
+        <span class="tech-pill">Power BI</span>
+        <span class="tech-pill">OpenAI</span>
+        <span class="tech-pill">Claude</span>
+        <span class="tech-pill">Gemini</span>
+        <span class="tech-pill">VS Code</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJETOS ============ -->
+  <section class="section section-alt" id="projects">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="projects_eyebrow">Projetos</span>
+        <h2 class="section-title" data-i18n="projects_title">Um retrato de como eu penso soluções.</h2>
+      </div>
+
+      <div class="projects-grid" data-reveal>
+        {% for p in projects %}
+        <article class="project-card" data-public="{{ 'true' if p.is_public else 'false' }}" {% if p.is_public %}data-url="{{ p.url }}"{% endif %}>
+          <div class="project-media {{ p.media_class }}">
+            {% if p.is_public %}
+            <span class="project-badge badge-public" data-i18n="badge_public">🌐 Público</span>
+            {% else %}
+            <span class="project-badge badge-private" data-i18n="badge_private">🔒 Privado</span>
+            {% endif %}
+          </div>
+          <div class="project-body">
+            <h3 data-i18n="proj_dyn_{{ p.id }}_title">{{ p.title_pt }}</h3>
+            <p data-i18n="proj_dyn_{{ p.id }}_desc">{{ p.desc_pt }}</p>
+            <div class="project-tags">{% for tag in p.tags.split(',') %}<span>{{ tag.strip() }}</span>{% endfor %}</div>
+            {% if p.is_public %}
+            <a href="javascript:void(0)" class="project-link" data-i18n="proj_cta">Ver Projeto →</a>
+            {% else %}
+            <a href="javascript:void(0)" class="project-link" data-i18n="proj_cta_private">Ver Preview →</a>
+            {% endif %}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      <!-- Modal de preview para sistemas privados -->
+      <div class="project-modal" id="projectModal">
+        <div class="project-modal-backdrop" onclick="closeProjectModal()"></div>
+        <div class="project-modal-box">
+          <button class="project-modal-close" onclick="closeProjectModal()" aria-label="Fechar">✕</button>
+          <div class="project-modal-shot" id="projectModalShot"></div>
+          <h3 id="projectModalTitle"></h3>
+          <p data-i18n="modal_private_note">Este é um sistema privado (uso interno de empresa/cliente). Por segurança, apenas a interface é exibida — sem acesso ao sistema real.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIÊNCIA ============ -->
+  <section class="section" id="experience">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="exp_eyebrow">Experiência</span>
+        <h2 class="section-title" data-i18n="exp_title">Trajetória construída com resultado.</h2>
+      </div>
+
+      <div class="timeline" data-reveal>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-date" data-i18n="exp1_date">Atual</span>
+            <h3 data-i18n="exp1_title">Instituto + Visão</h3>
+            <p data-i18n="exp1_desc">Desenvolvimento de soluções de automação e análise de dados para operações internas.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-date" data-i18n="exp2_date">Anterior</span>
+            <h3 data-i18n="exp2_title">CTR Contabilidade</h3>
+            <p data-i18n="exp2_desc">Gestão de processos contábeis e implementação de rotinas automatizadas de conferência.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-date" data-i18n="exp3_date">Anterior</span>
+            <h3 data-i18n="exp3_title">Centro América Tecnologia</h3>
+            <p data-i18n="exp3_desc">Desenvolvimento de sistemas e suporte técnico voltado a soluções de negócio.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FORMAÇÃO ============ -->
+  <section class="section section-alt" id="education">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="edu_eyebrow">Formação</span>
+        <h2 class="section-title" data-i18n="edu_title">Base sólida entre negócios e números.</h2>
+      </div>
+      <div class="edu-grid" data-reveal>
+        <div class="edu-card"><h3 data-i18n="edu1">Bacharel em Administração</h3></div>
+        <div class="edu-card"><h3 data-i18n="edu2">MBA em Administração e Contabilidade Tributária</h3></div>
+        <div class="edu-card"><h3 data-i18n="edu3">Ciências Contábeis — 6º semestre</h3></div>
+        <div class="edu-card"><h3 data-i18n="edu4">Pós-graduação em Licitações e Contratos — em andamento</h3></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CERTIFICAÇÕES ============ -->
+  <section class="section" id="certifications">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="cert_eyebrow">Certificações</span>
+        <h2 class="section-title" data-i18n="cert_title">Aprendizado contínuo.</h2>
+      </div>
+      <div class="cert-grid" data-reveal>
+        <div class="cert-card"><span>Python</span></div>
+        <div class="cert-card"><span>Power BI</span></div>
+        <div class="cert-card"><span data-i18n="cert3">Automação de Processos</span></div>
+        <div class="cert-card"><span data-i18n="cert4">Inteligência Artificial Aplicada</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DASHBOARD GALLERY ============ -->
+  <section class="section section-alt" id="gallery">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="gallery_eyebrow">Galeria</span>
+        <h2 class="section-title" data-i18n="gallery_title">Dashboards e Business Intelligence.</h2>
+      </div>
+      <div class="gallery-grid" data-reveal>
+        <div class="gallery-item gi-1"><span data-i18n="gallery1">Dashboard Financeiro</span></div>
+        <div class="gallery-item gi-2"><span data-i18n="gallery2">Painel de Contratos</span></div>
+        <div class="gallery-item gi-3"><span data-i18n="gallery3">Análise de Estoque</span></div>
+        <div class="gallery-item gi-4"><span data-i18n="gallery4">Relatório Power BI</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DIFERENCIAIS ============ -->
+  <section class="section" id="differentials">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="diff_eyebrow">Diferenciais</span>
+        <h2 class="section-title" data-i18n="diff_title">O que trago para cada projeto.</h2>
+      </div>
+      <div class="diff-grid" data-reveal>
+        <div class="diff-item"><h4 data-i18n="diff1">Resolução de Problemas</h4></div>
+        <div class="diff-item"><h4 data-i18n="diff2">Aprendizado Rápido</h4></div>
+        <div class="diff-item"><h4 data-i18n="diff3">Visão de Negócio</h4></div>
+        <div class="diff-item"><h4 data-i18n="diff4">Mentalidade AI First</h4></div>
+        <div class="diff-item"><h4 data-i18n="diff5">Pensamento Analítico</h4></div>
+        <div class="diff-item"><h4 data-i18n="diff6">Mentalidade de Automação</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESSO ============ -->
+  <section class="section section-alt" id="process">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="process_eyebrow">Processo de Trabalho</span>
+        <h2 class="section-title" data-i18n="process_title">Do diagnóstico à entrega.</h2>
+      </div>
+      <div class="process-flow" data-reveal>
+        <div class="process-step"><span class="process-num">01</span><h4 data-i18n="proc1">Descoberta</h4></div>
+        <div class="process-step"><span class="process-num">02</span><h4 data-i18n="proc2">Planejamento</h4></div>
+        <div class="process-step"><span class="process-num">03</span><h4 data-i18n="proc3">Desenvolvimento</h4></div>
+        <div class="process-step"><span class="process-num">04</span><h4 data-i18n="proc4">Testes</h4></div>
+        <div class="process-step"><span class="process-num">05</span><h4 data-i18n="proc5">Implantação</h4></div>
+        <div class="process-step"><span class="process-num">06</span><h4 data-i18n="proc6">Suporte</h4></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DEPOIMENTOS ============ -->
+  <section class="section" id="testimonials">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="testi_eyebrow">Depoimentos</span>
+        <h2 class="section-title" data-i18n="testi_title">O que dizem sobre o trabalho.</h2>
+      </div>
+      <div class="testi-grid" data-reveal>
+        <div class="testi-card">
+          <p data-i18n="testi1">"Automatizou um processo que consumia horas da nossa equipe todo mês. Resultado imediato."</p>
+          <span data-i18n="testi1_author">— Diretora Financeira, Consultoria</span>
+        </div>
+        <div class="testi-card">
+          <p data-i18n="testi2">"Entendeu o negócio antes de escrever a primeira linha de código. Isso fez toda diferença."</p>
+          <span data-i18n="testi2_author">— Sócio, Escritório Contábil</span>
+        </div>
+        <div class="testi-card">
+          <p data-i18n="testi3">"Dashboard entregue superou o que tínhamos em mente. Comunicação clara do início ao fim."</p>
+          <span data-i18n="testi3_author">— Gerente de Operações</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BLOG ============ -->
+  <section class="section section-alt" id="blog">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="blog_eyebrow">Blog</span>
+        <h2 class="section-title" data-i18n="blog_title">Ideias sobre Python, IA e negócios.</h2>
+      </div>
+      <div class="blog-grid" data-reveal>
+        <div class="blog-card">
+          <span class="blog-tag">Python</span>
+          <h3 data-i18n="blog1">Automatizando relatórios mensais com Python</h3>
+        </div>
+        <div class="blog-card">
+          <span class="blog-tag">IA</span>
+          <h3 data-i18n="blog2">Como aplicar IA sem complicar seu processo</h3>
+        </div>
+        <div class="blog-card">
+          <span class="blog-tag">Excel</span>
+          <h3 data-i18n="blog3">Dashboards que sua equipe realmente usa</h3>
+        </div>
+      </div>
+      <p class="blog-note" data-i18n="blog_note">Novos artigos em breve.</p>
+    </div>
+  </section>
+
+  <!-- ============ CONTATO ============ -->
+  <section class="section" id="contact">
+    <div class="section-inner">
+      <div class="section-head" data-reveal>
+        <span class="section-eyebrow" data-i18n="contact_eyebrow">Contato</span>
+        <h2 class="section-title" data-i18n="contact_title">Vamos conversar sobre o seu processo.</h2>
+        <p class="section-sub" data-i18n="contact_sub">Envie os detalhes do seu projeto e retorno por e-mail o quanto antes.</p>
+      </div>
+
+      <div class="contact-grid" data-reveal>
+        <form class="contact-form" id="contactForm">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="cName" data-i18n="form_name">Nome</label>
+              <input type="text" id="cName" required>
+            </div>
+            <div class="form-field">
+              <label for="cEmail" data-i18n="form_email">E-mail</label>
+              <input type="email" id="cEmail" required>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="cSubject" data-i18n="form_subject">Assunto</label>
+            <select id="cSubject">
+              <option data-i18n="form_opt1">Automação de Processos</option>
+              <option data-i18n="form_opt2">Desenvolvimento de Sistema</option>
+              <option data-i18n="form_opt3">Dashboard / BI</option>
+              <option data-i18n="form_opt4">Outro</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="cMessage" data-i18n="form_message">Mensagem</label>
+            <textarea id="cMessage" rows="5" required></textarea>
+          </div>
+          <button type="button" class="btn btn-primary btn-full" onclick="enviarFormulario()" data-i18n="form_submit">Enviar por E-mail</button>
+        </form>
+
+        <div class="contact-side">
+          <a href="mailto:{{ settings.contact_email.pt }}?subject=Contato%20via%20Portfólio" class="contact-direct">
+            <span class="contact-direct-label" data-i18n="contact_email_label">E-mail direto</span>
+            <span class="contact-direct-value">{{ settings.contact_email.pt }}</span>
+          </a>
+          <div class="contact-links">
+            <a href="{{ settings.linkedin_url.pt }}" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a href="{{ settings.github_url.pt }}" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span class="brand-mark small">YHG</span>
+    <p data-i18n="footer_text">Yago Henrick Alves Gomes — Business Process &amp; AI Automation Specialist</p>
+    <span class="footer-copy">© <span id="year"></span></span>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Voltar ao topo">↑</button>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
