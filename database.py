@@ -101,19 +101,19 @@ def init_db():
             ("MM Fashion — E-commerce", "MM Fashion — E-commerce",
              "Loja virtual completa de moda feminina: vitrine, categorias, promoções e painel administrativo com KPIs e gestão de pedidos.",
              "Full women's fashion online store: showcase, categories, promotions and an admin panel with KPIs and order management.",
-             "HTML, CSS, JavaScript", True, "https://github.com/", "pm-3", 3),
+             "HTML, CSS, JavaScript", True, "https://mmfashion.up.railway.app/", "pm-3", 3),
             ("Site Institucional — Advocacia", "Law Firm Website",
              "Site institucional para escritório de advocacia, com identidade visual sóbria, áreas de atuação e formulário de contato.",
              "Institutional website for a law firm, with a sober visual identity, practice areas and a contact form.",
-             "HTML, CSS, JavaScript", True, "https://github.com/", "pm-4", 4),
+             "HTML, CSS, JavaScript", True, "https://rogervilelaadvocacia.up.railway.app/", "pm-4", 4),
             ("Site Institucional — Contabilidade", "Accounting Firm Website",
              "Site institucional para escritório de contabilidade, com apresentação de serviços e captação de clientes.",
              "Institutional website for an accounting firm, showcasing services and capturing new client leads.",
-             "HTML, CSS, JavaScript", True, "https://github.com/", "pm-5", 5),
+             "HTML, CSS, JavaScript", False, "", "pm-5", 5),
             ("Site Institucional — Confeitaria", "Bakery Website",
              "Site institucional para confeitaria, com catálogo de produtos e pedidos via WhatsApp. Em desenvolvimento.",
              "Institutional website for a bakery, with a product catalog and WhatsApp ordering. In development.",
-             "HTML, CSS, JavaScript", True, "https://github.com/", "pm-6", 6),
+             "HTML, CSS, JavaScript", False, "", "pm-6", 6),
         ]
         cur.executemany(
             """INSERT INTO projects
