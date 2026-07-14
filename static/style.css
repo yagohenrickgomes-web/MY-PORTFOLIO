@@ -249,10 +249,9 @@ img{max-width:100%; display:block;}
 .projects-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
 .project-card{ border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); transition: transform .4s var(--ease), border-color .4s; cursor:pointer; }
 .project-card:hover{ transform: translateY(-6px); border-color: rgba(53,104,140,0.32); }
-.project-media{ height:180px; background:var(--gradient); opacity:0.85; position:relative; overflow:hidden; display:flex; align-items:flex-start; justify-content:flex-end; padding:14px; }
-.project-media::after{ content:''; position:absolute; inset:0; background:rgba(28,27,24,0.08); }
+.project-media{ height:180px; position:relative; overflow:hidden; background:var(--bg-alt); }
 .project-badge{
-  position:relative; z-index:1; font-family:var(--font-label); font-size:11px; font-weight:600;
+  position:absolute; top:14px; right:14px; z-index:2; font-family:var(--font-label); font-size:11px; font-weight:600;
   padding:6px 12px; border-radius:100px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
 .badge-public{ background:rgba(91,227,140,0.18); color:#5be38c; border:1px solid rgba(91,227,140,0.4); }
@@ -280,6 +279,58 @@ img{max-width:100%; display:block;}
 .pm-5{ background: linear-gradient(135deg,#5a3bc9,#4f7cff); }
 .pm-6{ background: linear-gradient(135deg,#9b6bff,#2f4ecf); }
 .project-body{ padding:24px; }
+
+/* ============ Project preview mockups ============ */
+.proj-mock{ position:absolute; inset:0; display:flex; flex-direction:column; font-family:var(--font-label); }
+.mock-bar{ height:26px; flex-shrink:0; display:flex; align-items:center; gap:5px; padding:0 10px; }
+.mock-bar--light{ background:#EFEDE7; }
+.mock-bar--dark{ background:#161616; }
+.mock-dot{ width:6px; height:6px; border-radius:50%; background:#666; }
+.mock-url{ margin-left:6px; font-size:9px; color:#8a8a8a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:0.2px; }
+.mock-bar--light .mock-url{ color:#8a8580; }
+.mock-body{ flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+
+/* MM Fashion */
+.mock--mmfashion .mock-body{ background:linear-gradient(160deg,#F7ECE6,#EFD9CE); flex-direction:column; align-items:flex-start; padding:16px; gap:8px; }
+.mock-mm-nav{ display:flex; gap:6px; }
+.mock-mm-nav span{ width:22px; height:4px; border-radius:2px; background:rgba(120,70,60,0.28); }
+.mock-mm-hero{ display:flex; flex-direction:column; gap:4px; margin-top:6px; }
+.mock-mm-word{ font-family:'Space Grotesk',serif; font-style:italic; font-size:20px; color:#5C2E27; font-weight:600; }
+.mock-mm-sub{ font-size:10px; letter-spacing:1px; text-transform:uppercase; color:#9C6B54; }
+.mock-mm-swatches{ display:flex; gap:6px; margin-top:auto; }
+.mock-mm-swatches i{ width:26px; height:26px; border-radius:6px; background:rgba(92,46,39,0.18); border:1px solid rgba(92,46,39,0.25); }
+.mock-mm-swatches i:nth-child(2){ background:rgba(184,150,90,0.28); }
+.mock-mm-swatches i:nth-child(3){ background:rgba(92,46,39,0.28); }
+.mock-mm-swatches i:nth-child(4){ background:rgba(184,150,90,0.18); }
+
+/* Advocacia */
+.mock--advocacia .mock-body{ background:linear-gradient(160deg,#1C1C1C,#262422); flex-direction:column; align-items:flex-start; justify-content:center; padding:18px; gap:8px; }
+.mock-adv-badge{ font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#B8965A; }
+.mock-adv-title{ font-family:'Space Grotesk',serif; font-size:17px; line-height:1.25; color:#F0EDE7; font-weight:600; }
+.mock-adv-rule{ width:34px; height:2px; background:#B8965A; margin-top:4px; }
+
+/* Contabilidade / Confeitaria (em produção) */
+.mock--contabilidade .mock-body{ background:linear-gradient(160deg,#122436,#1B3A54); flex-direction:column; gap:8px; color:#7FA8C9; }
+.mock--confeitaria .mock-body{ background:linear-gradient(160deg,#FBEAE4,#F6D3C6); flex-direction:column; gap:8px; color:#A85A3E; }
+.mock-icon{ width:30px; height:30px; }
+.mock-label{ font-size:12px; font-weight:600; letter-spacing:0.3px; color:inherit; }
+
+/* SagaCap Contratos BI */
+.mock--saga .mock-body{ background:linear-gradient(160deg,#0B1220,#16324F); flex-direction:column; gap:10px; color:#5C9BD8; padding:16px; align-items:flex-start; justify-content:center; }
+.mock-chart{ width:100%; height:44px; }
+.mock--saga .mock-label{ color:#CFE0F2; }
+
+/* Sistema Administrativo */
+.mock--admin .mock-body{ background:#1B1F27; padding:0; }
+.mock-admin-layout{ display:flex; width:100%; height:100%; align-items:stretch; justify-content:flex-start; }
+.mock-admin-side{ width:34px; background:#12151B; flex-shrink:0; }
+.mock-admin-main{ flex:1; padding:16px; display:flex; flex-direction:column; gap:8px; }
+.mock-admin-main i{ display:block; height:8px; border-radius:4px; background:rgba(255,255,255,0.08); width:70%; }
+.mock-admin-main i:nth-child(2){ width:45%; }
+.mock-admin-main i:nth-child(3){ width:58%; }
+.mock-admin-main b{ margin-top:auto; display:block; height:34px; border-radius:8px; background:rgba(53,104,140,0.35); }
+
+.mock--generic .mock-body{ background:var(--gradient); }
 .project-body h3{ font-family:var(--font-display); font-size:17px; margin-bottom:8px; }
 .project-body p{ font-size:14px; color:var(--text-muted); margin-bottom:14px; }
 .project-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
