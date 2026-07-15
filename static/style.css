@@ -249,7 +249,7 @@ img{max-width:100%; display:block;}
 .projects-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
 .project-card{ border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); transition: transform .4s var(--ease), border-color .4s; cursor:pointer; }
 .project-card:hover{ transform: translateY(-6px); border-color: rgba(53,104,140,0.32); }
-.project-media{ height:180px; position:relative; overflow:hidden; background:var(--bg-alt); }
+.project-media{ height:230px; position:relative; overflow:hidden; background:var(--bg-alt); }
 .project-badge{
   position:absolute; top:14px; right:14px; z-index:2; font-family:var(--font-label); font-size:11px; font-weight:600;
   padding:6px 12px; border-radius:100px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -331,7 +331,19 @@ img{max-width:100%; display:block;}
 .mock-admin-main b{ margin-top:auto; display:block; height:34px; border-radius:8px; background:rgba(53,104,140,0.35); }
 
 .mock--generic .mock-body{ background:var(--gradient); }
-.mock-body--photo{ background-size:cover; background-position:top center; }
+.mock-body--photo{ background-size:cover; background-position:top center; cursor:zoom-in; }
+
+/* ============ Lightbox (imagem em tela cheia) ============ */
+.lightbox{ position:fixed; inset:0; z-index:300; display:none; align-items:center; justify-content:center; padding:32px; }
+.lightbox.open{ display:flex; }
+.lightbox-backdrop{ position:absolute; inset:0; background:rgba(15,14,12,0.9); backdrop-filter: blur(8px); }
+.lightbox-img{ position:relative; z-index:1; max-width:92vw; max-height:88vh; border-radius:12px; box-shadow:0 30px 90px rgba(0,0,0,0.5); }
+.lightbox-close{
+  position:fixed; top:24px; right:24px; z-index:2; width:40px; height:40px; border-radius:50%;
+  background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#fff; font-size:16px;
+}
+.lightbox-close:hover{ background:rgba(255,255,255,0.22); }
+.lightbox-hint{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:2; color:rgba(255,255,255,0.6); font-family:var(--font-label); font-size:12px; }
 .project-body h3{ font-family:var(--font-display); font-size:17px; margin-bottom:8px; }
 .project-body p{ font-size:14px; color:var(--text-muted); margin-bottom:14px; }
 .project-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
@@ -362,7 +374,7 @@ img{max-width:100%; display:block;}
 .gallery-item{
   height:230px; border-radius:var(--radius); position:relative; display:flex; align-items:flex-end;
   border:1px solid var(--border); overflow:hidden; background-size:cover; background-position:top center;
-  transition: transform .4s var(--ease);
+  transition: transform .4s var(--ease); cursor:zoom-in;
 }
 .gallery-item:hover{ transform: translateY(-6px); }
 .gallery-item::before{

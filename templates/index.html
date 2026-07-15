@@ -293,7 +293,7 @@
 
       <div class="projects-grid" data-reveal>
         {% for p in projects %}
-        <article class="project-card" data-public="{{ 'true' if p.is_public else 'false' }}" {% if p.is_public %}data-url="{{ p.url }}"{% endif %}>
+        <article class="project-card" data-public="{{ 'true' if p.is_public else 'false' }}" {% if p.is_public %}data-url="{{ p.url }}"{% endif %} {% if 'Administrativo' in p.title_pt %}data-photo="/static/gallery/telaadm.png"{% endif %}>
           <div class="project-media {{ p.media_class }}">
             {% if 'MM Fashion' in p.title_pt %}
             <div class="proj-mock mock--mmfashion">
@@ -358,11 +358,6 @@
               <div class="mock-body"></div>
             </div>
             {% endif %}
-            {% if p.is_public %}
-            <span class="project-badge badge-public" data-i18n="badge_public">🌐 Público</span>
-            {% else %}
-            <span class="project-badge badge-private" data-i18n="badge_private">🔒 Privado</span>
-            {% endif %}
           </div>
           <div class="project-body">
             <h3 data-i18n="proj_dyn_{{ p.id }}_title">{{ p.title_pt }}</h3>
@@ -387,6 +382,14 @@
           <h3 id="projectModalTitle"></h3>
           <p data-i18n="modal_private_note">Este é um sistema privado (uso interno de empresa/cliente). Por segurança, apenas a interface é exibida — sem acesso ao sistema real.</p>
         </div>
+      </div>
+
+      <!-- Lightbox: visualização em tela cheia -->
+      <div class="lightbox" id="lightbox">
+        <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Fechar">✕</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
+        <span class="lightbox-hint">Clique fora da imagem pra fechar</span>
       </div>
     </div>
   </section>
@@ -469,19 +472,19 @@
         <h2 class="section-title" data-i18n="gallery_title">Dashboards e Business Intelligence.</h2>
       </div>
       <div class="gallery-grid" data-reveal>
-        <div class="gallery-item" style="background-image:url('/static/gallery/dash-faturamento.jpg')">
+        <div class="gallery-item" style="background-image:url('/static/gallery/dash-faturamento.jpg')" onclick="openLightbox('/static/gallery/dash-faturamento.jpg')">
           <div class="gallery-caption">
             <span class="gallery-title" data-i18n="gallery1_title">Faturamento em tempo real</span>
             <span class="gallery-sub" data-i18n="gallery1_sub">22 lojas, um painel só — do total geral ao ranking de vendedores.</span>
           </div>
         </div>
-        <div class="gallery-item" style="background-image:url('/static/gallery/dash-manutencao.jpg')">
+        <div class="gallery-item" style="background-image:url('/static/gallery/dash-manutencao.jpg')" onclick="openLightbox('/static/gallery/dash-manutencao.jpg')">
           <div class="gallery-caption">
             <span class="gallery-title" data-i18n="gallery2_title">Frota sob controle</span>
             <span class="gallery-sub" data-i18n="gallery2_sub">Agendamento, status de veículos e ordens de serviço sem planilha perdida.</span>
           </div>
         </div>
-        <div class="gallery-item" style="background-image:url('/static/gallery/dash-controle.jpg')">
+        <div class="gallery-item" style="background-image:url('/static/gallery/dash-controle.jpg')" onclick="openLightbox('/static/gallery/dash-controle.jpg')">
           <div class="gallery-caption">
             <span class="gallery-title" data-i18n="gallery3_title">Consumo sob a lupa</span>
             <span class="gallery-sub" data-i18n="gallery3_sub">Combustível, peças e serviços — o que cada unidade realmente consome.</span>
