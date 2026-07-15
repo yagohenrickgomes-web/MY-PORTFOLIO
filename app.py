@@ -19,10 +19,58 @@ import database as db
 
 app = FastAPI(title="Portfólio - Yago Henrick")
 
+# ---------------------------------------------------------------------------
+# Proteção simples contra força bruta no login.
+# Guarda tentativas falhas por IP em memória; reseta quando o app reinicia.
+# Não é infra dedicada (tipo Redis), mas já barra scripts automatizados.
+# ---------------------------------------------------------------------------
+_failed_attempts = {}
+MAX_ATTEMPTS = 5
+LOCKOUT_SECONDS = 15 * 60
+
+
+def _client_ip(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def _is_locked_out(ip: str) -> bool:
+    import time
+    record = _failed_attempts.get(ip)
+    if not record:
+        return False
+    count, last_attempt = record
+    if count >= MAX_ATTEMPTS and (time.time() - last_attempt) < LOCKOUT_SECONDS:
+        return True
+    if (time.time() - last_attempt) >= LOCKOUT_SECONDS:
+        _failed_attempts.pop(ip, None)
+    return False
+
+
+def _register_failed_attempt(ip: str):
+    import time
+    count, _ = _failed_attempts.get(ip, (0, 0))
+    _failed_attempts[ip] = (count + 1, time.time())
+
+
+def _clear_attempts(ip: str):
+    _failed_attempts.pop(ip, None)
+
 # Em produção (Railway), defina a variável de ambiente SECRET_KEY.
 # Localmente, se não estiver definida, usa uma gerada na hora (sessões caem a cada restart).
 SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
-app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+# https_only=True impede o cookie de sessão de vazar em conexão sem HTTPS.
+# same_site="lax" bloqueia a maioria dos ataques CSRF via navegação cross-site.
+IS_PRODUCTION = os.environ.get("RAILWAY_ENVIRONMENT") is not None
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=SECRET_KEY,
+    https_only=IS_PRODUCTION,
+    same_site="lax",
+    max_age=60 * 60 * 8,  # sessão expira em 8h
+)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -64,10 +112,22 @@ def admin_login_form(request: Request):
 
 @app.post("/admin/login", response_class=HTMLResponse)
 def admin_login(request: Request, username: str = Form(...), password: str = Form(...)):
+    ip = _client_ip(request)
+
+    if _is_locked_out(ip):
+        return templates.TemplateResponse(
+            "admin_login.html",
+            {"request": request, "error": "Muitas tentativas. Aguarde 15 minutos antes de tentar de novo."},
+            status_code=429,
+        )
+
     if db.verify_password(username, password):
+        _clear_attempts(ip)
         request.session["logged_in"] = True
         request.session["username"] = username
         return RedirectResponse("/admin", status_code=303)
+
+    _register_failed_attempt(ip)
     return templates.TemplateResponse(
         "admin_login.html",
         {"request": request, "error": "Usuário ou senha inválidos."},
