@@ -331,6 +331,7 @@ img{max-width:100%; display:block;}
 .mock-admin-main b{ margin-top:auto; display:block; height:34px; border-radius:8px; background:rgba(53,104,140,0.35); }
 
 .mock--generic .mock-body{ background:var(--gradient); }
+.mock-body--photo{ background-size:cover; background-position:top center; }
 .project-body h3{ font-family:var(--font-display); font-size:17px; margin-bottom:8px; }
 .project-body p{ font-size:14px; color:var(--text-muted); margin-bottom:14px; }
 .project-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
