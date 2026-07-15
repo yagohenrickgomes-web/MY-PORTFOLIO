@@ -98,21 +98,18 @@ const projectModalTitle = document.getElementById('projectModalTitle');
 
 document.querySelectorAll('.project-card').forEach(card => {
   const isPublic = card.getAttribute('data-public') === 'true';
-  const link = card.querySelector('.project-link');
+  const photo = card.getAttribute('data-photo');
 
   card.addEventListener('click', (e) => {
     if(isPublic){
       const url = card.getAttribute('data-url');
       if(url) window.open(url, '_blank', 'noopener');
+    } else if(photo){
+      openLightbox(photo);
     } else {
       openProjectModal(card);
     }
   });
-
-  // keep inner link in sync so it doesn't trigger a second navigation
-  if(link){
-    link.addEventListener('click', (e) => e.stopPropagation());
-  }
 });
 
 function openProjectModal(card){
@@ -127,6 +124,24 @@ function closeProjectModal(){
   projectModal.classList.remove('open');
   document.body.style.overflow = '';
 }
+
+/* ---------- Lightbox (imagem em tela cheia) ---------- */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+function openLightbox(src){
+  lightboxImg.src = src;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  lightboxImg.src = '';
+}
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){ closeLightbox(); closeProjectModal(); }
+});
 
 /* ---------- Contact form -> email ---------- */
 function enviarFormulario(){
