@@ -541,20 +541,19 @@
         <h2 class="section-title" data-i18n="blog_title">Ideias sobre Python, IA e negócios.</h2>
       </div>
       <div class="blog-grid" data-reveal>
-        <div class="blog-card">
-          <span class="blog-tag">Python</span>
-          <h3 data-i18n="blog1">Automatizando relatórios mensais com Python</h3>
-        </div>
-        <div class="blog-card">
-          <span class="blog-tag">IA</span>
-          <h3 data-i18n="blog2">Como aplicar IA sem complicar seu processo</h3>
-        </div>
-        <div class="blog-card">
-          <span class="blog-tag">Excel</span>
-          <h3 data-i18n="blog3">Dashboards que sua equipe realmente usa</h3>
-        </div>
+        {% for post in posts %}
+        <a href="/blog/{{ post.slug }}" class="blog-card">
+          <span class="blog-tag">{{ post.tag }}</span>
+          <h3>{{ post.title_pt }}</h3>
+          {% if post.excerpt_pt %}<p class="blog-excerpt">{{ post.excerpt_pt }}</p>{% endif %}
+        </a>
+        {% endfor %}
       </div>
+      {% if posts %}
+      <a href="/blog" class="btn btn-ghost" style="margin-top:32px;" data-i18n="blog_see_all">Ver todos os artigos →</a>
+      {% else %}
       <p class="blog-note" data-i18n="blog_note">Novos artigos em breve.</p>
+      {% endif %}
     </div>
   </section>
 

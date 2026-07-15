@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ post.title_pt }} — Blog</title>
+<meta name="description" content="{{ post.excerpt_pt }}">
+<link rel="icon" href="/static/favicon.ico" sizes="any">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+<style>
+  .post-body{ max-width:680px; margin:0 auto; }
+  .post-body p{ color:var(--text-muted); font-size:16px; line-height:1.8; margin-bottom:20px; }
+  .post-meta{ display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+  .post-meta .blog-tag{ font-family:var(--font-label); font-size:11px; color:var(--accent-blue); text-transform:uppercase; letter-spacing:1px; }
+  .post-meta .post-date{ font-size:12px; color:var(--text-dim); }
+</style>
+</head>
+<body style="cursor:default;">
+<div class="noise-overlay"></div>
+
+<header class="site-header scrolled">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Yago Henrick">
+        <defs>
+          <linearGradient id="logoGrad" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:var(--accent-blue)"/>
+            <stop offset="1" style="stop-color:var(--accent-violet)"/>
+          </linearGradient>
+        </defs>
+        <rect x="1.5" y="1.5" width="37" height="37" rx="11" stroke="url(#logoGrad)" stroke-width="1.4" opacity="0.4"/>
+        <path d="M16.5 12.5 L9.5 20 L16.5 27.5" stroke="url(#logoGrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M23.5 12.5 L30.5 20 L23.5 27.5" stroke="url(#logoGrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="20" cy="28.5" r="1.8" fill="url(#logoGrad)"/>
+      </svg>
+    </a>
+    <nav class="main-nav">
+      <a href="/#about">Sobre</a>
+      <a href="/#projects">Projetos</a>
+      <a href="/blog">Blog</a>
+      <a href="/#contact">Contato</a>
+    </nav>
+  </div>
+</header>
+
+<main style="padding-top:140px;">
+  <section class="section" style="padding-top:0;">
+    <div class="section-inner post-body">
+      <a href="/blog" style="font-size:13px; color:var(--text-dim); text-decoration:none;">← Todos os artigos</a>
+      <div class="post-meta" style="margin-top:24px;">
+        <span class="blog-tag">{{ post.tag }}</span>
+        <span class="post-date">{{ post.created_at.strftime('%d/%m/%Y') }}</span>
+      </div>
+      <h1 class="section-title" style="margin-bottom:32px;">{{ post.title_pt }}</h1>
+      {% for para in post.content_pt.split('\n\n') %}
+      {% if para.strip() %}<p>{{ para.strip() }}</p>{% endif %}
+      {% endfor %}
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="/" style="text-decoration:none; color:inherit;">← Voltar ao portfólio</a>
+    <span class="footer-copy">© <span id="year"></span> Yago Henrick Alves Gomes</span>
+  </div>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

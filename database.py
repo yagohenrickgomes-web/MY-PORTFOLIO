@@ -57,6 +57,20 @@ def init_db():
         password_hash TEXT NOT NULL,
         salt TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS posts (
+        id SERIAL PRIMARY KEY,
+        slug TEXT UNIQUE NOT NULL,
+        title_pt TEXT NOT NULL,
+        title_en TEXT NOT NULL,
+        excerpt_pt TEXT NOT NULL DEFAULT '',
+        excerpt_en TEXT NOT NULL DEFAULT '',
+        content_pt TEXT NOT NULL,
+        content_en TEXT NOT NULL,
+        tag TEXT NOT NULL DEFAULT 'Python',
+        published BOOLEAN NOT NULL DEFAULT TRUE,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
     """)
     conn.commit()
 
@@ -252,6 +266,110 @@ def delete_project(project_id: int):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("DELETE FROM projects WHERE id = %s", (project_id,))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+# ---------------------------------------------------------------------------
+# Blog
+# ---------------------------------------------------------------------------
+def _slugify(text: str) -> str:
+    import re
+    import unicodedata
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    text = re.sub(r"[^a-zA-Z0-9\s-]", "", text).strip().lower()
+    text = re.sub(r"[\s-]+", "-", text)
+    return text or "post"
+
+
+def _unique_slug(base_slug: str, cur, exclude_id: int = None) -> str:
+    slug = base_slug
+    i = 2
+    while True:
+        if exclude_id:
+            cur.execute("SELECT id FROM posts WHERE slug = %s AND id != %s", (slug, exclude_id))
+        else:
+            cur.execute("SELECT id FROM posts WHERE slug = %s", (slug,))
+        if not cur.fetchone():
+            return slug
+        slug = f"{base_slug}-{i}"
+        i += 1
+
+
+def get_posts(published_only: bool = False, limit: int = None) -> list:
+    conn = get_connection()
+    cur = conn.cursor()
+    query = "SELECT * FROM posts"
+    if published_only:
+        query += " WHERE published = TRUE"
+    query += " ORDER BY created_at DESC"
+    if limit:
+        query += f" LIMIT {int(limit)}"
+    cur.execute(query)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+def get_post(post_id: int):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM posts WHERE id = %s", (post_id,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    return dict(row) if row else None
+
+
+def get_post_by_slug(slug: str):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM posts WHERE slug = %s", (slug,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+    return dict(row) if row else None
+
+
+def create_post(data: dict):
+    conn = get_connection()
+    cur = conn.cursor()
+    base_slug = _slugify(data["title_pt"])
+    data["slug"] = _unique_slug(base_slug, cur)
+    cur.execute(
+        """INSERT INTO posts
+           (slug, title_pt, title_en, excerpt_pt, excerpt_en, content_pt, content_en, tag, published)
+           VALUES (%(slug)s, %(title_pt)s, %(title_en)s, %(excerpt_pt)s, %(excerpt_en)s,
+                   %(content_pt)s, %(content_en)s, %(tag)s, %(published)s)""",
+        data,
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def update_post(post_id: int, data: dict):
+    conn = get_connection()
+    cur = conn.cursor()
+    data["id"] = post_id
+    cur.execute(
+        """UPDATE posts SET
+           title_pt=%(title_pt)s, title_en=%(title_en)s, excerpt_pt=%(excerpt_pt)s, excerpt_en=%(excerpt_en)s,
+           content_pt=%(content_pt)s, content_en=%(content_en)s, tag=%(tag)s, published=%(published)s
+           WHERE id=%(id)s""",
+        data,
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def delete_post(post_id: int):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM posts WHERE id = %s", (post_id,))
     conn.commit()
     cur.close()
     conn.close()

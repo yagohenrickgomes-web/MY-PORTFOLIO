@@ -89,7 +89,7 @@
   <div class="actions">
     <span>Olá, {{ username }}</span>
     <a class="view-site" href="/" target="_blank">Ver site ↗</a>
-    <a class="logout" href="/admin/logout">Sair</a>
+    <a class="logout" href="{{ admin_base }}/logout">Sair</a>
   </div>
 </header>
 
@@ -97,6 +97,7 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="content">Conteúdo</button>
     <button class="tab-btn" data-tab="projects">Projetos</button>
+    <button class="tab-btn" data-tab="blog">Blog</button>
     <button class="tab-btn" data-tab="account">Conta</button>
   </div>
 
@@ -104,14 +105,14 @@
   <div class="panel active" id="panel-content">
     <div class="card">
       <h2>Hero</h2>
-      <form method="post" action="/admin/settings/hero_role">
+      <form method="post" action="{{ admin_base }}/settings/hero_role">
         <label>Cargo (PT)</label>
         <input type="text" name="value_pt" value="{{ settings.hero_role.pt }}">
         <label>Role (EN)</label>
         <input type="text" name="value_en" value="{{ settings.hero_role.en }}">
         <button class="btn" type="submit">Salvar Cargo</button>
       </form>
-      <form method="post" action="/admin/settings/hero_sub" style="margin-top:20px;">
+      <form method="post" action="{{ admin_base }}/settings/hero_sub" style="margin-top:20px;">
         <label>Subtítulo (PT)</label>
         <textarea name="value_pt">{{ settings.hero_sub.pt }}</textarea>
         <label>Subtitle (EN)</label>
@@ -123,7 +124,7 @@
     <div class="card">
       <h2>Sobre Mim</h2>
       {% for key in ['about_p1','about_p2','about_p3'] %}
-      <form method="post" action="/admin/settings/{{ key }}" style="margin-bottom:20px;">
+      <form method="post" action="{{ admin_base }}/settings/{{ key }}" style="margin-bottom:20px;">
         <label>Parágrafo (PT)</label>
         <textarea name="value_pt">{{ settings[key].pt }}</textarea>
         <label>Paragraph (EN)</label>
@@ -135,19 +136,19 @@
 
     <div class="card">
       <h2>Contato</h2>
-      <form method="post" action="/admin/settings/contact_email">
+      <form method="post" action="{{ admin_base }}/settings/contact_email">
         <label>E-mail de contato</label>
         <input type="email" name="value_pt" value="{{ settings.contact_email.pt }}">
         <input type="hidden" name="value_en" value="{{ settings.contact_email.pt }}">
         <button class="btn" type="submit">Salvar E-mail</button>
       </form>
-      <form method="post" action="/admin/settings/linkedin_url" style="margin-top:20px;">
+      <form method="post" action="{{ admin_base }}/settings/linkedin_url" style="margin-top:20px;">
         <label>LinkedIn (URL)</label>
         <input type="url" name="value_pt" value="{{ settings.linkedin_url.pt }}">
         <input type="hidden" name="value_en" value="{{ settings.linkedin_url.pt }}">
         <button class="btn" type="submit">Salvar LinkedIn</button>
       </form>
-      <form method="post" action="/admin/settings/github_url" style="margin-top:20px;">
+      <form method="post" action="{{ admin_base }}/settings/github_url" style="margin-top:20px;">
         <label>GitHub (URL)</label>
         <input type="url" name="value_pt" value="{{ settings.github_url.pt }}">
         <input type="hidden" name="value_en" value="{{ settings.github_url.pt }}">
@@ -168,13 +169,13 @@
         </div>
         <div class="btns">
           <a href="#edit-{{ p.id }}" onclick="toggleEdit({{ p.id }})">Editar</a>
-          <form method="post" action="/admin/projects/{{ p.id }}/delete" onsubmit="return confirm('Excluir este projeto?');" style="display:inline;">
+          <form method="post" action="{{ admin_base }}/projects/{{ p.id }}/delete" onsubmit="return confirm('Excluir este projeto?');" style="display:inline;">
             <button type="submit" class="danger-inline" style="background:none;border:none;color:#ff9b9b;cursor:pointer;font-size:12px;padding:0;">Excluir</button>
           </form>
         </div>
       </div>
       <div id="edit-{{ p.id }}" style="display:none; padding:16px 0;">
-        <form method="post" action="/admin/projects/{{ p.id }}/edit">
+        <form method="post" action="{{ admin_base }}/projects/{{ p.id }}/edit">
           <div class="row2">
             <div><label>Título (PT)</label><input type="text" name="title_pt" value="{{ p.title_pt }}"></div>
             <div><label>Title (EN)</label><input type="text" name="title_en" value="{{ p.title_en }}"></div>
@@ -211,7 +212,7 @@
     <div class="card">
       <details class="new-project">
         <summary>+ Adicionar novo projeto</summary>
-        <form method="post" action="/admin/projects/new">
+        <form method="post" action="{{ admin_base }}/projects/new">
           <div class="row2">
             <div><label>Título (PT)</label><input type="text" name="title_pt" required></div>
             <div><label>Title (EN)</label><input type="text" name="title_en" required></div>
@@ -245,12 +246,101 @@
     </div>
   </div>
 
+  <!-- ===== BLOG ===== -->
+  <div class="panel" id="panel-blog">
+    <div class="card">
+      <h2>Artigos</h2>
+      {% for post in posts %}
+      <div class="project-row">
+        <div class="info">
+          <strong>{{ post.title_pt }}</strong>
+          <span class="badge {{ 'pub' if post.published else 'priv' }}">{{ '🟢 Publicado' if post.published else '⚪ Rascunho' }}</span>
+        </div>
+        <div class="btns">
+          <a href="#post-edit-{{ post.id }}" onclick="toggleBlock('post-edit-{{ post.id }}')">Editar</a>
+          <form method="post" action="{{ admin_base }}/posts/{{ post.id }}/delete" onsubmit="return confirm('Excluir este artigo?');" style="display:inline;">
+            <button type="submit" style="background:none;border:none;color:#ff9b9b;cursor:pointer;font-size:12px;padding:0;">Excluir</button>
+          </form>
+        </div>
+      </div>
+      <div id="post-edit-{{ post.id }}" style="display:none; padding:16px 0;">
+        <form method="post" action="{{ admin_base }}/posts/{{ post.id }}/edit">
+          <div class="row2">
+            <div><label>Título (PT)</label><input type="text" name="title_pt" value="{{ post.title_pt }}"></div>
+            <div><label>Title (EN)</label><input type="text" name="title_en" value="{{ post.title_en }}"></div>
+          </div>
+          <div class="row2">
+            <div><label>Resumo (PT)</label><textarea name="excerpt_pt">{{ post.excerpt_pt }}</textarea></div>
+            <div><label>Excerpt (EN)</label><textarea name="excerpt_en">{{ post.excerpt_en }}</textarea></div>
+          </div>
+          <div class="row2">
+            <div><label>Conteúdo completo (PT) — separe parágrafos com uma linha em branco</label><textarea name="content_pt" style="min-height:160px;">{{ post.content_pt }}</textarea></div>
+            <div><label>Full content (EN)</label><textarea name="content_en" style="min-height:160px;">{{ post.content_en }}</textarea></div>
+          </div>
+          <div class="row2">
+            <div>
+              <label>Categoria</label>
+              <select name="tag">
+                {% for t in ['Python','IA','Excel','Automação','Business'] %}
+                <option value="{{ t }}" {% if post.tag == t %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="checkbox-row" style="margin-top:30px;">
+              <input type="checkbox" name="published" id="pub-post-{{ post.id }}" {% if post.published %}checked{% endif %}>
+              <label for="pub-post-{{ post.id }}">Publicado (visível no site)</label>
+            </div>
+          </div>
+          <button class="btn" type="submit">Salvar Alterações</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="card">
+      <details class="new-project">
+        <summary>+ Novo artigo</summary>
+        <form method="post" action="{{ admin_base }}/posts/new">
+          <div class="row2">
+            <div><label>Título (PT)</label><input type="text" name="title_pt" required></div>
+            <div><label>Title (EN)</label><input type="text" name="title_en" required></div>
+          </div>
+          <div class="row2">
+            <div><label>Resumo (PT)</label><textarea name="excerpt_pt" placeholder="1-2 frases pra aparecer no card"></textarea></div>
+            <div><label>Excerpt (EN)</label><textarea name="excerpt_en"></textarea></div>
+          </div>
+          <div class="row2">
+            <div><label>Conteúdo completo (PT) — separe parágrafos com uma linha em branco</label><textarea name="content_pt" required style="min-height:160px;"></textarea></div>
+            <div><label>Full content (EN)</label><textarea name="content_en" required style="min-height:160px;"></textarea></div>
+          </div>
+          <div class="row2">
+            <div>
+              <label>Categoria</label>
+              <select name="tag">
+                <option value="Python">Python</option>
+                <option value="IA">IA</option>
+                <option value="Excel">Excel</option>
+                <option value="Automação">Automação</option>
+                <option value="Business">Business</option>
+              </select>
+            </div>
+            <div class="checkbox-row" style="margin-top:30px;">
+              <input type="checkbox" name="published" id="new-post-pub" checked>
+              <label for="new-post-pub">Publicado (visível no site)</label>
+            </div>
+          </div>
+          <button class="btn" type="submit">Publicar Artigo</button>
+        </form>
+      </details>
+    </div>
+  </div>
+
   <!-- ===== CONTA ===== -->
   <div class="panel" id="panel-account">
     <div class="card">
       <h2>Trocar senha</h2>
       {% if password_error %}<div class="error">{{ password_error }}</div>{% endif %}
-      <form method="post" action="/admin/password">
+      <form method="post" action="{{ admin_base }}/password">
         <label>Senha atual</label>
         <input type="password" name="current_password" required>
         <label>Nova senha</label>
@@ -273,6 +363,11 @@
 
   function toggleEdit(id){
     const el = document.getElementById('edit-' + id);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function toggleBlock(fullId){
+    const el = document.getElementById(fullId);
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
   }
 

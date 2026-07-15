@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Yago Henrick Alves Gomes</title>
+<meta name="description" content="Artigos sobre automação de processos, Python, Excel e produtividade.">
+<link rel="icon" href="/static/favicon.ico" sizes="any">
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body style="cursor:default;">
+<div class="noise-overlay"></div>
+
+<header class="site-header scrolled">
+  <div class="header-inner">
+    <a href="/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Yago Henrick">
+        <defs>
+          <linearGradient id="logoGrad" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+            <stop offset="0" style="stop-color:var(--accent-blue)"/>
+            <stop offset="1" style="stop-color:var(--accent-violet)"/>
+          </linearGradient>
+        </defs>
+        <rect x="1.5" y="1.5" width="37" height="37" rx="11" stroke="url(#logoGrad)" stroke-width="1.4" opacity="0.4"/>
+        <path d="M16.5 12.5 L9.5 20 L16.5 27.5" stroke="url(#logoGrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M23.5 12.5 L30.5 20 L23.5 27.5" stroke="url(#logoGrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="20" cy="28.5" r="1.8" fill="url(#logoGrad)"/>
+      </svg>
+    </a>
+    <nav class="main-nav">
+      <a href="/#about">Sobre</a>
+      <a href="/#projects">Projetos</a>
+      <a href="/blog">Blog</a>
+      <a href="/#contact">Contato</a>
+    </nav>
+  </div>
+</header>
+
+<main style="padding-top:140px;">
+  <section class="section" style="padding-top:0;">
+    <div class="section-inner">
+      <div class="section-head">
+        <span class="section-eyebrow">Blog</span>
+        <h1 class="section-title">Ideias sobre automação, Python e processos.</h1>
+      </div>
+
+      {% if posts %}
+      <div class="blog-grid">
+        {% for post in posts %}
+        <a href="/blog/{{ post.slug }}" class="blog-card">
+          <span class="blog-tag">{{ post.tag }}</span>
+          <h3>{{ post.title_pt }}</h3>
+          {% if post.excerpt_pt %}<p class="blog-excerpt">{{ post.excerpt_pt }}</p>{% endif %}
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="blog-note">Nenhum artigo publicado ainda.</p>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="/" style="text-decoration:none; color:inherit;">← Voltar ao portfólio</a>
+    <span class="footer-copy">© <span id="year"></span> Yago Henrick Alves Gomes</span>
+  </div>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

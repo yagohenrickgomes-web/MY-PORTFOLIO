@@ -38,7 +38,7 @@
     <h1>Painel Admin</h1>
     <p class="sub">Yago Henrick — Portfólio</p>
     {% if error %}<div class="error">{{ error }}</div>{% endif %}
-    <form method="post" action="/admin/login">
+    <form method="post" action="{{ admin_base }}/login">
       <label for="username">Usuário</label>
       <input type="text" id="username" name="username" required autofocus>
       <label for="password">Senha</label>

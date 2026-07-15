@@ -1,28 +1,36 @@
 """
-Portfólio de Yago Henrick Alves Gomes — FastAPI + SQLite.
+Portfólio de Yago Henrick Alves Gomes — FastAPI + PostgreSQL.
 
 Como rodar:
     .venv\\Scripts\\python.exe -m uvicorn app:app --reload
 
 Site público:  http://127.0.0.1:8000
-Painel admin:  http://127.0.0.1:8000/admin  (login padrão: admin / admin123)
+Painel admin:  http://127.0.0.1:8000/<ADMIN_PATH>  (login padrão: admin / admin123)
+
+O endereço do painel admin NÃO é fixo em "/admin" por segurança — ele é lido
+da variável de ambiente ADMIN_PATH. Configure algo só seu (ex: "painel-yago-9x2")
+no .env local e nas variáveis do Railway. Se ADMIN_PATH não estiver definida,
+cai no padrão "/admin" (não recomendado em produção).
 """
-from fastapi import FastAPI, Request, Form, Depends, HTTPException
+from fastapi import FastAPI, APIRouter, Request, Form, Depends, HTTPException
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 import os
 import secrets
+import time
 
 import database as db
 
 app = FastAPI(title="Portfólio - Yago Henrick")
 
+ADMIN_PATH = os.environ.get("ADMIN_PATH", "admin").strip("/")
+ADMIN_BASE = f"/{ADMIN_PATH}"
+
 # ---------------------------------------------------------------------------
 # Proteção simples contra força bruta no login.
 # Guarda tentativas falhas por IP em memória; reseta quando o app reinicia.
-# Não é infra dedicada (tipo Redis), mas já barra scripts automatizados.
 # ---------------------------------------------------------------------------
 _failed_attempts = {}
 MAX_ATTEMPTS = 5
@@ -37,7 +45,6 @@ def _client_ip(request: Request) -> str:
 
 
 def _is_locked_out(ip: str) -> bool:
-    import time
     record = _failed_attempts.get(ip)
     if not record:
         return False
@@ -50,7 +57,6 @@ def _is_locked_out(ip: str) -> bool:
 
 
 def _register_failed_attempt(ip: str):
-    import time
     count, _ = _failed_attempts.get(ip, (0, 0))
     _failed_attempts[ip] = (count + 1, time.time())
 
@@ -58,11 +64,9 @@ def _register_failed_attempt(ip: str):
 def _clear_attempts(ip: str):
     _failed_attempts.pop(ip, None)
 
+
 # Em produção (Railway), defina a variável de ambiente SECRET_KEY.
-# Localmente, se não estiver definida, usa uma gerada na hora (sessões caem a cada restart).
 SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
-# https_only=True impede o cookie de sessão de vazar em conexão sem HTTPS.
-# same_site="lax" bloqueia a maioria dos ataques CSRF via navegação cross-site.
 IS_PRODUCTION = os.environ.get("RAILWAY_ENVIRONMENT") is not None
 app.add_middleware(
     SessionMiddleware,
@@ -83,7 +87,7 @@ db.init_db()
 # ---------------------------------------------------------------------------
 def require_login(request: Request):
     if not request.session.get("logged_in"):
-        raise HTTPException(status_code=303, headers={"Location": "/admin/login"})
+        raise HTTPException(status_code=303, headers={"Location": f"{ADMIN_BASE}/login"})
     return True
 
 
@@ -94,30 +98,58 @@ def require_login(request: Request):
 def home(request: Request):
     settings = db.get_settings()
     projects = db.get_projects()
+    posts = db.get_posts(published_only=True, limit=3)
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "settings": settings, "projects": projects},
+        {"request": request, "settings": settings, "projects": projects, "posts": posts},
+    )
+
+
+@app.get("/blog", response_class=HTMLResponse)
+def blog_list(request: Request):
+    settings = db.get_settings()
+    posts = db.get_posts(published_only=True)
+    return templates.TemplateResponse(
+        "blog_list.html",
+        {"request": request, "settings": settings, "posts": posts},
+    )
+
+
+@app.get("/blog/{slug}", response_class=HTMLResponse)
+def blog_post_page(slug: str, request: Request):
+    settings = db.get_settings()
+    post = db.get_post_by_slug(slug)
+    if not post or not post["published"]:
+        raise HTTPException(status_code=404)
+    return templates.TemplateResponse(
+        "blog_post.html",
+        {"request": request, "settings": settings, "post": post},
     )
 
 
 # ---------------------------------------------------------------------------
-# Admin - login / logout
+# Admin router — montado no caminho secreto definido por ADMIN_PATH
 # ---------------------------------------------------------------------------
-@app.get("/admin/login", response_class=HTMLResponse)
+admin = APIRouter(prefix=ADMIN_BASE)
+
+
+@admin.get("/login", response_class=HTMLResponse)
 def admin_login_form(request: Request):
     if request.session.get("logged_in"):
-        return RedirectResponse("/admin", status_code=303)
-    return templates.TemplateResponse("admin_login.html", {"request": request, "error": None})
+        return RedirectResponse(ADMIN_BASE, status_code=303)
+    return templates.TemplateResponse(
+        "admin_login.html", {"request": request, "error": None, "admin_base": ADMIN_BASE}
+    )
 
 
-@app.post("/admin/login", response_class=HTMLResponse)
+@admin.post("/login", response_class=HTMLResponse)
 def admin_login(request: Request, username: str = Form(...), password: str = Form(...)):
     ip = _client_ip(request)
 
     if _is_locked_out(ip):
         return templates.TemplateResponse(
             "admin_login.html",
-            {"request": request, "error": "Muitas tentativas. Aguarde 15 minutos antes de tentar de novo."},
+            {"request": request, "error": "Muitas tentativas. Aguarde 15 minutos antes de tentar de novo.", "admin_base": ADMIN_BASE},
             status_code=429,
         )
 
@@ -125,56 +157,52 @@ def admin_login(request: Request, username: str = Form(...), password: str = For
         _clear_attempts(ip)
         request.session["logged_in"] = True
         request.session["username"] = username
-        return RedirectResponse("/admin", status_code=303)
+        return RedirectResponse(ADMIN_BASE, status_code=303)
 
     _register_failed_attempt(ip)
     return templates.TemplateResponse(
         "admin_login.html",
-        {"request": request, "error": "Usuário ou senha inválidos."},
+        {"request": request, "error": "Usuário ou senha inválidos.", "admin_base": ADMIN_BASE},
         status_code=401,
     )
 
 
-@app.get("/admin/logout")
+@admin.get("/logout")
 def admin_logout(request: Request):
     request.session.clear()
     return RedirectResponse("/", status_code=303)
 
 
-# ---------------------------------------------------------------------------
-# Admin - dashboard
-# ---------------------------------------------------------------------------
-@app.get("/admin", response_class=HTMLResponse)
+@admin.get("", response_class=HTMLResponse)
 def admin_dashboard(request: Request, _=Depends(require_login)):
     settings = db.get_settings()
     projects = db.get_projects()
+    posts = db.get_posts()
     return templates.TemplateResponse(
         "admin_dashboard.html",
         {
             "request": request,
             "settings": settings,
             "projects": projects,
+            "posts": posts,
             "username": request.session.get("username"),
+            "admin_base": ADMIN_BASE,
         },
     )
 
 
-@app.post("/admin/settings")
-def admin_update_settings(request: Request, _=Depends(require_login)):
-    return RedirectResponse("/admin", status_code=303)
-
-
-@app.post("/admin/settings/{key}")
+@admin.post("/settings/{key}")
 async def admin_update_one_setting(
     key: str, request: Request,
     value_pt: str = Form(...), value_en: str = Form(...),
     _=Depends(require_login),
 ):
     db.update_setting(key, value_pt, value_en)
-    return RedirectResponse("/admin#settings", status_code=303)
+    return RedirectResponse(f"{ADMIN_BASE}#settings", status_code=303)
 
 
-@app.post("/admin/projects/new")
+# ---- Projetos ----
+@admin.post("/projects/new")
 def admin_create_project(
     request: Request,
     title_pt: str = Form(...), title_en: str = Form(...),
@@ -190,10 +218,10 @@ def admin_create_project(
         "tags": tags, "is_public": bool(is_public),
         "url": url, "media_class": media_class, "sort_order": sort_order,
     })
-    return RedirectResponse("/admin#projects", status_code=303)
+    return RedirectResponse(f"{ADMIN_BASE}#projects", status_code=303)
 
 
-@app.post("/admin/projects/{project_id}/edit")
+@admin.post("/projects/{project_id}/edit")
 def admin_edit_project(
     project_id: int, request: Request,
     title_pt: str = Form(...), title_en: str = Form(...),
@@ -209,16 +237,60 @@ def admin_edit_project(
         "tags": tags, "is_public": bool(is_public),
         "url": url, "media_class": media_class, "sort_order": sort_order,
     })
-    return RedirectResponse("/admin#projects", status_code=303)
+    return RedirectResponse(f"{ADMIN_BASE}#projects", status_code=303)
 
 
-@app.post("/admin/projects/{project_id}/delete")
+@admin.post("/projects/{project_id}/delete")
 def admin_delete_project(project_id: int, request: Request, _=Depends(require_login)):
     db.delete_project(project_id)
-    return RedirectResponse("/admin#projects", status_code=303)
+    return RedirectResponse(f"{ADMIN_BASE}#projects", status_code=303)
 
 
-@app.post("/admin/password")
+# ---- Blog ----
+@admin.post("/posts/new")
+def admin_create_post(
+    request: Request,
+    title_pt: str = Form(...), title_en: str = Form(...),
+    excerpt_pt: str = Form(""), excerpt_en: str = Form(""),
+    content_pt: str = Form(...), content_en: str = Form(...),
+    tag: str = Form("Python"), published: str = Form(None),
+    _=Depends(require_login),
+):
+    db.create_post({
+        "title_pt": title_pt, "title_en": title_en,
+        "excerpt_pt": excerpt_pt, "excerpt_en": excerpt_en,
+        "content_pt": content_pt, "content_en": content_en,
+        "tag": tag, "published": bool(published),
+    })
+    return RedirectResponse(f"{ADMIN_BASE}#blog", status_code=303)
+
+
+@admin.post("/posts/{post_id}/edit")
+def admin_edit_post(
+    post_id: int, request: Request,
+    title_pt: str = Form(...), title_en: str = Form(...),
+    excerpt_pt: str = Form(""), excerpt_en: str = Form(""),
+    content_pt: str = Form(...), content_en: str = Form(...),
+    tag: str = Form("Python"), published: str = Form(None),
+    _=Depends(require_login),
+):
+    db.update_post(post_id, {
+        "title_pt": title_pt, "title_en": title_en,
+        "excerpt_pt": excerpt_pt, "excerpt_en": excerpt_en,
+        "content_pt": content_pt, "content_en": content_en,
+        "tag": tag, "published": bool(published),
+    })
+    return RedirectResponse(f"{ADMIN_BASE}#blog", status_code=303)
+
+
+@admin.post("/posts/{post_id}/delete")
+def admin_delete_post(post_id: int, request: Request, _=Depends(require_login)):
+    db.delete_post(post_id)
+    return RedirectResponse(f"{ADMIN_BASE}#blog", status_code=303)
+
+
+# ---- Conta ----
+@admin.post("/password")
 def admin_change_password(
     request: Request,
     current_password: str = Form(...),
@@ -229,13 +301,18 @@ def admin_change_password(
     if not db.verify_password(username, current_password):
         settings = db.get_settings()
         projects = db.get_projects()
+        posts = db.get_posts()
         return templates.TemplateResponse(
             "admin_dashboard.html",
             {
-                "request": request, "settings": settings, "projects": projects,
+                "request": request, "settings": settings, "projects": projects, "posts": posts,
                 "username": username, "password_error": "Senha atual incorreta.",
+                "admin_base": ADMIN_BASE,
             },
             status_code=401,
         )
     db.change_admin_password(username, new_password)
-    return RedirectResponse("/admin#account", status_code=303)
+    return RedirectResponse(f"{ADMIN_BASE}#account", status_code=303)
+
+
+app.include_router(admin)
