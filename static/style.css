@@ -357,14 +357,20 @@ img{max-width:100%; display:block;}
 .cert-card:hover{ border-color:var(--accent-violet); color:var(--text); }
 
 /* ============ Gallery ============ */
-.gallery-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-.gallery-item{ height:200px; border-radius:var(--radius); position:relative; display:flex; align-items:flex-end; padding:18px; border:1px solid var(--border); overflow:hidden; }
-.gallery-item span{ font-family:var(--font-label); font-size:13px; font-weight:500; z-index:1; }
-.gallery-item::before{ content:''; position:absolute; inset:0; opacity:0.75; }
-.gi-1::before{ background:linear-gradient(160deg,#4f7cff,#0a0b12); }
-.gi-2::before{ background:linear-gradient(160deg,#9b6bff,#0a0b12); }
-.gi-3::before{ background:linear-gradient(160deg,#2f4ecf,#0a0b12); }
-.gi-4::before{ background:linear-gradient(160deg,#5a3bc9,#0a0b12); }
+.gallery-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.gallery-item{
+  height:230px; border-radius:var(--radius); position:relative; display:flex; align-items:flex-end;
+  border:1px solid var(--border); overflow:hidden; background-size:cover; background-position:top center;
+  transition: transform .4s var(--ease);
+}
+.gallery-item:hover{ transform: translateY(-6px); }
+.gallery-item::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(28,27,24,0) 40%, rgba(15,14,12,0.88) 100%);
+}
+.gallery-caption{ position:relative; z-index:1; padding:18px; display:flex; flex-direction:column; gap:4px; }
+.gallery-title{ font-family:var(--font-display); font-size:15px; font-weight:600; color:#fff; }
+.gallery-sub{ font-family:var(--font-body); font-size:12px; color:rgba(255,255,255,0.78); line-height:1.4; }
 
 /* ============ Differentials ============ */
 .diff-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
