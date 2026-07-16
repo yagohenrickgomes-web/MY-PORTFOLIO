@@ -161,20 +161,60 @@ function enviarFormulario(){
   window.location.href = mailto;
 }
 
-/* ---------- Language toggle ---------- */
+/* ---------- Ícones de tecnologia (nos pills e nas tags dos projetos) ---------- */
+const TECH_ICONS = {
+  python: '<circle cx="7" cy="7" r="3.2"/><circle cx="13" cy="13" r="3.2"/><path d="M7 3.8h6a3.2 3.2 0 013.2 3.2v0M13 16.2H7A3.2 3.2 0 013.8 13v0" stroke-linecap="round"/>',
+  javascript: '<rect x="2.5" y="2.5" width="15" height="15" rx="3"/><path d="M7 13.2c0 1 .6 1.6 1.6 1.6S10 14.2 10 13V7.5M12.3 11.8c.4.7 1 1 1.7 1 1 0 1.7-.5 1.7-1.3 0-1.8-3-1-3-2.8 0-.8.7-1.3 1.6-1.3.8 0 1.4.4 1.7 1" stroke-linecap="round"/>',
+  html: '<path d="M4 3l1.3 14L10 18.5 14.7 17 16 3H4z"/><path d="M7 7h6.3l-.2 2.3H8.9M13 9.3l-.4 4.8L10 15l-2.5-.8-.15-1.8" stroke-linecap="round"/>',
+  css: '<path d="M4 3l1.3 14L10 18.5 14.7 17 16 3H4z"/><path d="M13.2 7H6.8M12.9 9.8H7.2l.15 1.6h5.4l-.35 3.9L10 16.1l-2.35-.7-.15-1.7" stroke-linecap="round"/>',
+  sql: '<ellipse cx="10" cy="5" rx="6.3" ry="2.3"/><path d="M3.7 5v10c0 1.27 2.82 2.3 6.3 2.3s6.3-1.03 6.3-2.3V5M3.7 10c0 1.27 2.82 2.3 6.3 2.3s6.3-1.03 6.3-2.3" stroke-linecap="round"/>',
+  postgresql: '<ellipse cx="10" cy="5" rx="6.3" ry="2.3"/><path d="M3.7 5v10c0 1.27 2.82 2.3 6.3 2.3s6.3-1.03 6.3-2.3V5M3.7 10c0 1.27 2.82 2.3 6.3 2.3s6.3-1.03 6.3-2.3" stroke-linecap="round"/>',
+  sqlite: '<ellipse cx="10" cy="5" rx="6.3" ry="2.3"/><path d="M3.7 5v10c0 1.27 2.82 2.3 6.3 2.3s6.3-1.03 6.3-2.3V5M3.7 10c0 1.27 2.82 2.3 6.3 2.3s6.3-1.03 6.3-2.3" stroke-linecap="round"/>',
+  git: '<circle cx="6" cy="5" r="1.8"/><circle cx="6" cy="15" r="1.8"/><circle cx="14" cy="10" r="1.8"/><path d="M6 6.8V13.2M7.5 5H12a2 2 0 012 2v1.3" stroke-linecap="round"/>',
+  github: '<rect x="2.8" y="4" width="14.4" height="10.5" rx="1.8"/><path d="M6.3 14.5v1.7M13.7 14.5v1.7M2.8 9.3h14.4" stroke-linecap="round"/>',
+  docker: '<rect x="3" y="9" width="3" height="3"/><rect x="6.6" y="9" width="3" height="3"/><rect x="10.2" y="9" width="3" height="3"/><rect x="6.6" y="5.4" width="3" height="3"/><path d="M2 12.2c0 3 2.7 4.6 8 4.6 5.6 0 8.5-2.4 9-6.4-.8-.6-1.9-.8-3-.4-.3-1-1-1.7-2-2" stroke-linecap="round"/>',
+  vscode: '<path d="M13.6 2.6L6 9l-3-2.3-1.4 1L5 10l-3.4 2.3 1.4 1L6 11l7.6 6.4 3.4-1.6V4.2l-3.4-1.6z"/>',
+  "vs code": '<path d="M13.6 2.6L6 9l-3-2.3-1.4 1L5 10l-3.4 2.3 1.4 1L6 11l7.6 6.4 3.4-1.6V4.2l-3.4-1.6z"/>',
+  "google apps script": '<path d="M6 3.5h6.5L15 6v10.5H6z" stroke-linejoin="round"/><path d="M9 9l1.5 1.5L9 12M12 9l-1.5 1.5L12 12" stroke-linecap="round" stroke-linejoin="round"/>',
+  fastapi: '<path d="M11.5 2L4 11h5l-1.5 7L16 9h-5l1.5-7z" stroke-linejoin="round"/>',
+  pyside6: '<rect x="2.8" y="3.5" width="14.4" height="13" rx="1.6"/><path d="M2.8 6.8h14.4" stroke-linecap="round"/><circle cx="4.6" cy="5.15" r="0.5" fill="currentColor" stroke="none"/>',
+  backend: '<rect x="3" y="3" width="14" height="4.5" rx="1.2"/><rect x="3" y="9" width="14" height="4.5" rx="1.2"/><circle cx="5.5" cy="5.25" r="0.6" fill="currentColor" stroke="none"/><circle cx="5.5" cy="11.25" r="0.6" fill="currentColor" stroke="none"/>',
+  excel: '<rect x="2.8" y="2.8" width="14.4" height="14.4" rx="2"/><path d="M2.8 8.2h14.4M8.4 2.8v14.4M6 5.5l2.4 2.7M8.4 5.5L6 8.2" stroke-linecap="round"/>',
+  vba: '<circle cx="10" cy="10" r="2.6"/><path d="M10 3.5v2M10 14.5v2M16.5 10h-2M5.5 10h-2M14.6 5.4l-1.4 1.4M6.8 13.2l-1.4 1.4M14.6 14.6l-1.4-1.4M6.8 6.8L5.4 5.4" stroke-linecap="round"/>',
+  macros: '<circle cx="10" cy="10" r="2.6"/><path d="M10 3.5v2M10 14.5v2M16.5 10h-2M5.5 10h-2M14.6 5.4l-1.4 1.4M6.8 13.2l-1.4 1.4M14.6 14.6l-1.4-1.4M6.8 6.8L5.4 5.4" stroke-linecap="round"/>',
+  "power query": '<path d="M3 4h14l-5.5 6.5v5L8.5 17v-6.5z" stroke-linejoin="round"/>',
+  openai: '<path d="M10 2.5l2.2 4.5 4.9.7-3.5 3.5.8 4.9-4.4-2.3-4.4 2.3.8-4.9-3.5-3.5 4.9-.7z" stroke-linejoin="round"/>',
+  claude: '<path d="M10 2.5l2.2 4.5 4.9.7-3.5 3.5.8 4.9-4.4-2.3-4.4 2.3.8-4.9-3.5-3.5 4.9-.7z" stroke-linejoin="round"/>',
+  gemini: '<path d="M10 2.5l2.2 4.5 4.9.7-3.5 3.5.8 4.9-4.4-2.3-4.4 2.3.8-4.9-3.5-3.5 4.9-.7z" stroke-linejoin="round"/>',
+};
+
+function injectTechIcons(){
+  document.querySelectorAll('.tech-pill, .project-tags span').forEach(el => {
+    if(el.dataset.iconized) return;
+    const key = el.textContent.trim().toLowerCase();
+    if(TECH_ICONS[key]){
+      const label = el.textContent.trim();
+      el.innerHTML = `<svg class="tech-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4">${TECH_ICONS[key]}</svg><span>${label}</span>`;
+      el.dataset.iconized = 'true';
+    }
+  });
+}
+injectTechIcons();
+
+
 let currentLang = 'pt';
 const langToggle = document.getElementById('langToggle');
 
 const i18n = {
   pt: {
     nav_about:'Sobre', nav_services:'O Que Faço', nav_tech:'Tecnologias', nav_projects:'Projetos',
-    nav_experience:'Experiência', nav_education:'Formação', nav_blog:'Blog', nav_contact:'Contato', nav_cta:'Contato',
+    nav_experience:'Experiência', nav_education:'Formação', nav_blog:'Blog', nav_contact:'Contato', nav_cta:'Contato', nav_cv:'CV ↓',
     hero_eyebrow:'Disponível para projetos remotos e presenciais',
     hero_name:'Yago Henrick', hero_surname:'Alves Gomes',
     hero_role:'Business Process & AI Automation Specialist',
     hero_sub:'Transformando processos empresariais em soluções inteligentes utilizando Inteligência Artificial, Python e Análise de Dados.',
     hero_btn_projects:'Ver Projetos', hero_btn_contact:'Falar Comigo', hero_btn_cv:'Download CV ↓',
-    pipeline_label:'Fluxo de Automação em tempo real', pipe_tag1:'Dados', pipe_tag2:'IA', pipe_tag3:'Automação', pipe_tag4:'Resultado',
+    pipeline_label:'Fluxo de Automação', pipe_tag1:'Dados', pipe_tag2:'IA', pipe_tag3:'Automação', pipe_tag4:'Resultado',
     scroll_cue:'Explore',
     about_eyebrow:'Sobre Mim', about_title:'Onde negócios e tecnologia se encontram.',
     about_p1:'Minha trajetória começou na administração e contabilidade, mas foi na tecnologia que encontrei a ferramenta certa para resolver problemas reais de negócio. Hoje uno essas duas visões — a de quem entende processos e a de quem constrói sistemas — para criar soluções que realmente entregam resultado.',
@@ -232,13 +272,13 @@ const i18n = {
   },
   en: {
     nav_about:'About', nav_services:'What I Do', nav_tech:'Technologies', nav_projects:'Projects',
-    nav_experience:'Experience', nav_education:'Education', nav_blog:'Blog', nav_contact:'Contact', nav_cta:'Contact',
+    nav_experience:'Experience', nav_education:'Education', nav_blog:'Blog', nav_contact:'Contact', nav_cta:'Contact', nav_cv:'CV ↓',
     hero_eyebrow:'Available for remote and on-site projects',
     hero_name:'Yago Henrick', hero_surname:'Alves Gomes',
     hero_role:'Business Process & AI Automation Specialist',
     hero_sub:'Turning business processes into intelligent solutions using Artificial Intelligence, Python and Data Analysis.',
     hero_btn_projects:'View Projects', hero_btn_contact:'Get in Touch', hero_btn_cv:'Download CV ↓',
-    pipeline_label:'Real-time automation flow', pipe_tag1:'Data', pipe_tag2:'AI', pipe_tag3:'Automation', pipe_tag4:'Result',
+    pipeline_label:'Automation Flow', pipe_tag1:'Data', pipe_tag2:'AI', pipe_tag3:'Automation', pipe_tag4:'Result',
     scroll_cue:'Explore',
     about_eyebrow:'About Me', about_title:'Where business and technology meet.',
     about_p1:'My path started in administration and accounting, but it was in technology that I found the right tool to solve real business problems. Today I combine both perspectives — understanding processes and building systems — to create solutions that truly deliver results.',

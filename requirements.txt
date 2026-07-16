@@ -6,3 +6,4 @@ python-multipart
 itsdangerous
 psycopg2-binary
 python-dotenv
+reportlab

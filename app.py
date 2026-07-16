@@ -13,7 +13,7 @@ no .env local e nas variáveis do Railway. Se ADMIN_PATH não estiver definida,
 cai no padrão "/admin" (não recomendado em produção).
 """
 from fastapi import FastAPI, APIRouter, Request, Form, Depends, HTTPException
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import RedirectResponse, HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -22,6 +22,7 @@ import secrets
 import time
 
 import database as db
+import cv_generator
 
 app = FastAPI(title="Portfólio - Yago Henrick")
 
@@ -125,6 +126,58 @@ def blog_post_page(slug: str, request: Request):
         "blog_post.html",
         {"request": request, "settings": settings, "post": post},
     )
+
+
+@app.get("/cv.pdf")
+def download_cv():
+    pdf_bytes = cv_generator.generate_cv_pdf()
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": 'attachment; filename="Yago_Henrick_Alves_Gomes_CV.pdf"'},
+    )
+
+
+@app.get("/robots.txt", response_class=HTMLResponse)
+def robots_txt(request: Request):
+    base_url = str(request.base_url).rstrip("/")
+    # Não listamos o caminho do admin aqui de propósito — o robots.txt é público,
+    # e um "Disallow" nele acabaria denunciando justamente o endereço que escondemos.
+    content = f"""User-agent: *
+Allow: /
+
+Sitemap: {base_url}/sitemap.xml
+"""
+    return HTMLResponse(content=content, media_type="text/plain")
+
+
+@app.get("/sitemap.xml")
+def sitemap_xml(request: Request):
+    base_url = str(request.base_url).rstrip("/")
+    posts = db.get_posts(published_only=True)
+
+    urls = [
+        {"loc": f"{base_url}/", "priority": "1.0"},
+        {"loc": f"{base_url}/blog", "priority": "0.8"},
+    ]
+    for post in posts:
+        urls.append({
+            "loc": f"{base_url}/blog/{post['slug']}",
+            "lastmod": post["created_at"].strftime("%Y-%m-%d"),
+            "priority": "0.6",
+        })
+
+    xml_parts = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in urls:
+        xml_parts.append("<url>")
+        xml_parts.append(f"<loc>{u['loc']}</loc>")
+        if "lastmod" in u:
+            xml_parts.append(f"<lastmod>{u['lastmod']}</lastmod>")
+        xml_parts.append(f"<priority>{u['priority']}</priority>")
+        xml_parts.append("</url>")
+    xml_parts.append("</urlset>")
+
+    return HTMLResponse(content="".join(xml_parts), media_type="application/xml")
 
 
 # ---------------------------------------------------------------------------
