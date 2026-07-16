@@ -105,9 +105,9 @@ def init_db():
     if cur.fetchone()["c"] == 0:
         projects = [
             ("SagaCap Contratos — BI Dashboard", "SagaCap Contratos — BI Dashboard",
-             "Dashboard desktop para gestão de contratos: alertas de vencimento, mapa por estado, relatórios em PDF e sincronização com Google Sheets. Uso interno da equipe de Contratos.",
-             "Desktop dashboard for contract management: expiry alerts, state-level map, PDF reports and Google Sheets sync. Internal use for the Contracts team.",
-             "Python, PySide6, PostgreSQL", False, "", "pm-1", 1),
+             "Dashboard desktop para gestão de contratos: alertas de vencimento, mapa por estado, relatórios em PDF e sincronização com Google Sheets. Única versão desktop do portfólio, com suporte a dois bancos (PostgreSQL para uso em rede e SQLite portátil via USB). Uso interno da equipe de Contratos.",
+             "Desktop dashboard for contract management: expiry alerts, state-level map, PDF reports and Google Sheets sync. The only desktop project in this portfolio, supporting two databases (PostgreSQL for networked use and a portable SQLite build). Internal use for the Contracts team.",
+             "Python, PySide6, PostgreSQL, SQLite", False, "", "pm-1", 1),
             ("Sistema Administrativo (Tela Admin)", "Administrative System",
              "Painel administrativo interno com controle de usuários e permissões, usado para gestão de operações de um cliente.",
              "Internal administrative panel with user and permission management, used to run a client's operations.",
@@ -120,14 +120,14 @@ def init_db():
              "Site institucional para escritório de advocacia, com identidade visual sóbria, áreas de atuação e formulário de contato.",
              "Institutional website for a law firm, with a sober visual identity, practice areas and a contact form.",
              "HTML, CSS, JavaScript", True, "https://rogervilelaadvocacia.up.railway.app/", "pm-4", 4),
-            ("Site Institucional — Contabilidade", "Accounting Firm Website",
-             "Site institucional para escritório de contabilidade, com apresentação de serviços e captação de clientes.",
-             "Institutional website for an accounting firm, showcasing services and capturing new client leads.",
-             "HTML, CSS, JavaScript", False, "", "pm-5", 5),
-            ("Site Institucional — Confeitaria", "Bakery Website",
-             "Site institucional para confeitaria, com catálogo de produtos e pedidos via WhatsApp. Em desenvolvimento.",
-             "Institutional website for a bakery, with a product catalog and WhatsApp ordering. In development.",
-             "HTML, CSS, JavaScript", False, "", "pm-6", 6),
+            ("Gomes Contabilidade", "Gomes Contabilidade",
+             "Site institucional para escritório de contabilidade, com áreas de atuação, artigos técnicos e formulário de contato.",
+             "Institutional website for an accounting firm, with practice areas, technical articles and a contact form.",
+             "HTML, CSS, JavaScript", True, "https://yagohenrickgomes-web.github.io/gomescontabilidade/", "pm-5", 5),
+            ("Doces Fran — Confeitaria Artesanal", "Doces Fran — Artisan Bakery",
+             "Loja virtual de confeitaria artesanal, com vitrine de produtos, categorias, depoimentos e pedidos via WhatsApp.",
+             "Artisan bakery online store, with product showcase, categories, testimonials and WhatsApp ordering.",
+             "HTML, CSS, JavaScript", True, "https://yagohenrickgomes-web.github.io/docesdafran/", "pm-6", 6),
         ]
         cur.executemany(
             """INSERT INTO projects
