@@ -336,7 +336,7 @@ img{max-width:100%; display:block;}
 .mock-admin-main b{ margin-top:auto; display:block; height:34px; border-radius:8px; background:rgba(53,104,140,0.35); }
 
 .mock--generic .mock-body{ background:var(--gradient); }
-.mock-body--photo{ background-size:contain; background-position:center; background-repeat:no-repeat; background-color:#12151B; cursor:zoom-in; }
+.mock-body--photo{ background-size:contain; background-position:center; background-repeat:no-repeat; background-color:#12151B; cursor:zoom-in; padding:10px; background-origin:content-box; }
 
 /* ============ Lightbox (imagem em tela cheia) ============ */
 .lightbox{ position:fixed; inset:0; z-index:300; display:none; align-items:center; justify-content:center; padding:32px; }
