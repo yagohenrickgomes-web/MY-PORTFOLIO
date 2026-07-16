@@ -28,8 +28,6 @@ DASHBOARD_IMAGES = [
     ("gallery/dash-faturamento.jpg", "Faturamento por Loja"),
     ("gallery/dash-manutencao.jpg", "GTM — Controle de Frota"),
     ("gallery/dash-controle.jpg", "CEGM — Controle de Consumo"),
-    ("gallery/telaadm.png", "Sistema Administrativo"),
-    ("gallery/contratos.png", "SagaCap Contratos — BI"),
 ]
 
 EXPERIENCE = [
@@ -60,26 +58,26 @@ def _styles():
     ss = getSampleStyleSheet()
     styles = {
         "name": ParagraphStyle("name", parent=ss["Title"], fontName="Helvetica-Bold",
-                                fontSize=24, textColor=INK, spaceAfter=2, alignment=TA_LEFT),
+                                fontSize=24, textColor=INK, spaceAfter=4, alignment=TA_LEFT),
         "role": ParagraphStyle("role", parent=ss["Normal"], fontName="Helvetica-Bold",
-                                fontSize=12.5, textColor=NAVY, spaceAfter=6),
+                                fontSize=12.5, textColor=NAVY, spaceAfter=8),
         "contact": ParagraphStyle("contact", parent=ss["Normal"], fontName="Helvetica",
                                    fontSize=9.5, textColor=MUTED, spaceAfter=0),
         "h2": ParagraphStyle("h2", parent=ss["Normal"], fontName="Helvetica-Bold",
-                              fontSize=12, textColor=NAVY, spaceBefore=16, spaceAfter=8,
+                              fontSize=12, textColor=NAVY, spaceBefore=22, spaceAfter=12,
                               letterSpacing=0.5),
         "body": ParagraphStyle("body", parent=ss["Normal"], fontName="Helvetica",
-                                fontSize=9.7, textColor=INK, leading=14, spaceAfter=6),
+                                fontSize=9.7, textColor=INK, leading=16, spaceAfter=10),
         "job_title": ParagraphStyle("job_title", parent=ss["Normal"], fontName="Helvetica-Bold",
-                                     fontSize=10.5, textColor=INK, spaceAfter=1),
+                                     fontSize=10.5, textColor=INK, spaceAfter=3, spaceBefore=10),
         "job_date": ParagraphStyle("job_date", parent=ss["Normal"], fontName="Helvetica-Oblique",
-                                    fontSize=8.5, textColor=DIM, spaceAfter=3),
+                                    fontSize=8.5, textColor=DIM, spaceAfter=4),
         "bullet": ParagraphStyle("bullet", parent=ss["Normal"], fontName="Helvetica",
-                                  fontSize=9.3, textColor=INK, leading=13, leftIndent=10, spaceAfter=8),
+                                  fontSize=9.3, textColor=INK, leading=15, leftIndent=10, spaceAfter=12),
         "caption": ParagraphStyle("caption", parent=ss["Normal"], fontName="Helvetica",
-                                   fontSize=7.8, textColor=MUTED, alignment=1, spaceBefore=3),
+                                   fontSize=7.8, textColor=MUTED, alignment=1, spaceBefore=5),
         "skill": ParagraphStyle("skill", parent=ss["Normal"], fontName="Helvetica",
-                                 fontSize=9, textColor=INK, leading=14),
+                                 fontSize=9, textColor=INK, leading=18),
     }
     return styles
 
@@ -114,7 +112,7 @@ def generate_cv_pdf() -> bytes:
         f'{SITE_URL}'
     )
     story.append(Paragraph(contact_line, s["contact"]))
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 14))
     story.append(HRFlowable(width="100%", thickness=1.2, color=NAVY, spaceAfter=4))
 
     # ---- Resumo ----
@@ -167,8 +165,10 @@ def generate_cv_pdf() -> bytes:
         img_table = Table(table_data, colWidths=[img_cell_w + 4] * 3, hAlign="LEFT")
         img_table.setStyle(TableStyle([
             ("VALIGN", (0, 0), (-1, -1), "TOP"),
-            ("TOPPADDING", (0, 0), (-1, -1), 4),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+            ("TOPPADDING", (0, 0), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 16),
+            ("LEFTPADDING", (0, 0), (-1, -1), 4),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 8),
         ]))
         story.append(img_table)
 
